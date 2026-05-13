@@ -1,0 +1,89 @@
+scenario_id: analysis_tools_001
+scenario_name: Analysis Tools Detection
+description: >
+  Evaluates how detectable the environment is to anti-analysis probes that
+  scan the running process list for known security and reverse-engineering
+  tools. Covers debuggers (OllyDbg, ImmunityDebugger, WinDbg, IDA Pro,
+  x64dbg, Cheat Engine), SysInternals tools (Process Explorer, Process
+  Monitor, Regmon, Filemon, TCPView, Autoruns), network analyzers (Wireshark,
+  Dumpcap, Fiddler, HTTP Debugger), process analysis tools (ProcessHacker,
+  SysAnalyzer, HookExplorer, SysInspector), PE tools (ImportREC, PETools,
+  LordPE), sandboxes (JoeBox), and instrumentation frameworks (Frida).
+  Anti-disassembly tricks (jump-based, impossible disassembly, function/return
+  pointer abuse) are also tested.
+  Uses al-khaser as the sole probe backend.
+version: "1.0"
+
+tools:
+  alkhaser:
+    timeout: 120
+    sleep: 5
+    checks:
+      - ANALYSIS_TOOLS
+      - ANTI_DISASSM
+
+categories:
+  - id: analysis_tools
+    name: Analysis Tools Detection
+    weight: 1.0
+    keywords:
+      # ── Debuggers ────────────────────────────────────────────────────────────
+      - ollydbg
+      - immunity
+      - windbg
+      - ida pro
+      - ida
+      - x64dbg
+      - x32dbg
+      - cheat engine
+      - cheatengine
+
+      # ── SysInternals tools ───────────────────────────────────────────────────
+      - process explorer
+      - procexp
+      - process monitor
+      - procmon
+      - regmon
+      - filemon
+      - tcpview
+      - autoruns
+
+      # ── Network analyzers ─────────────────────────────────────────────────────
+      - wireshark
+      - dumpcap
+      - fiddler
+      - http debugger
+
+      # ── Process / system analysis ─────────────────────────────────────────────
+      - processhacker
+      - process hacker
+      - sysanalyzer
+      - hookexplorer
+      - sysinspector
+
+      # ── PE analysis tools ────────────────────────────────────────────────────
+      - importrec
+      - petools
+      - lordpe
+      - resource hacker
+
+      # ── Sandbox systems ──────────────────────────────────────────────────────
+      - joebox
+
+      # ── Instrumentation frameworks ───────────────────────────────────────────
+      - frida
+
+      # ── Anti-disassembly tricks ──────────────────────────────────────────────
+      - jump
+      - disassembly
+      - function pointer
+      - return pointer
+      - macro
+      - document_close
+      - auto_close
+      - recentfiles
+
+scoring:
+  detected_value: 0.0
+  not_detected_value: 1.0
+  error_behavior: exclude

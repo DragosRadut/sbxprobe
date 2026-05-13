@@ -1,0 +1,24 @@
+# Global tool registry for sbxprobe.
+# Defines binary paths, expected versions, and default execution parameters.
+# Scenario files reference tools by name and may override timeout and sleep,
+# but the executable path and version are managed here only.
+
+alkhaser:
+  executable: "probes\\al-khaser\\al-khaser_x86.exe"
+  version: "0.81"       # expected version — logged and validated against parsed output
+  default_timeout: 120  # seconds; scenarios should override for focused runs
+  default_sleep: 10     # --sleep passed to al-khaser; controls timing-check delay
+
+pafish:
+  executable: "probes\\pafish\\pafish.exe"
+  version: "0.6.1"
+  default_timeout: 60
+  default_sleep: 0    # pafish accepts no --sleep flag; field kept for schema consistency
+
+# Future tools — uncomment and populate as you integrate them:
+#
+# vmde:
+#   executable: "vmde\\vmde.exe"
+#   version: "1.0"
+#   default_timeout: 60
+#   default_sleep: 0

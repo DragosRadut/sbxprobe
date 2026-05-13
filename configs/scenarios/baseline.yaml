@@ -1,0 +1,193 @@
+scenario_id: baseline_001
+scenario_name: Baseline Transparency Evaluation
+description: >
+  Initial sandbox transparency evaluation using al-khaser as the probe backend.
+  Covers VM detection, anti-debug, timing attacks, and resource profiling.
+version: "1.0"
+
+tools:
+  alkhaser:
+    timeout: 300
+    sleep: 10
+    checks:
+      - TLS
+      - DEBUG
+      - GEN_SANDBOX
+      - VBOX
+      - VMWARE
+      - VPC
+      - QEMU
+      - KVM
+      - XEN
+      - WINE
+      - PARALLELS
+      - HYPERV
+      - TIMING_ATTACKS
+      - ANALYSIS_TOOLS
+
+categories:
+  # ── VM / Generic Sandbox Detection ───────────────────────────────────────────
+  # Covers: hypervisor fingerprints, sandbox DLL/process/file/registry artifacts,
+  # username+hostname blacklists, IDT/LDT probes, module enumeration walks.
+  - id: vm_checks
+    name: VM Detection Checks
+    weight: 0.35
+    keywords:
+      # hypervisor / virtualisation
+      - virtualbox
+      - vmware
+      - virtual machine
+      - qemu
+      - hypervisor
+      - vbox
+      - parallels
+      - xen
+      - kvm
+      - vpcext
+      - vmtools
+      - vmtoolsd
+      - innotek
+      - red pill
+      - no pill
+      - cpuid
+      - acpi
+      - bochs
+      # descriptor-table probes (SIDT/SGDT/SLDT)
+      - descriptor table
+      - interrupt descriptor
+      - local descriptor
+      # DLL injection / module enumeration section
+      - loaded modules contains
+      - enumerating modules
+      - enumerateloadedmodules
+      - process ldr
+      - walking process memory
+      - hidden modules
+      # generic sandbox detection section
+      - process file name contains
+      - process file name looks
+      - username matches
+      - hostname matches
+      - username is
+      - netbios name
+      - dns hostname
+      - sandbox
+      - sandboxie
+      - sbiedll
+      - vmcheck
+      - snxhk
+      - avghookx
+      - avghooka
+      - api_log
+      - dir_watch
+      - pstorec
+      - wpespy
+      - cmdvrt
+      - checking processes
+      - looking-glass
+      - vddsystray
+      # file/path existence checks
+      - file paths exist
+      - foobar
+      - email
+
+  # ── Anti-Debug ────────────────────────────────────────────────────────────────
+  # Covers: PEB flags, NtQuery* APIs, handle tricks, breakpoint probes,
+  # kernel debugger checks, write-watch, job object detection.
+  - id: anti_debug
+    name: Anti-Debug Checks
+    weight: 0.30
+    keywords:
+      - isdebuggerpresent
+      - checkremotedebuggerpresent
+      - beingdebugged
+      - ntglobalflag
+      - peb.ntglobalflag
+      - peb.being
+      - processheap
+      - heap flag
+      - heap force
+      - low fragmentation heap
+      - ntqueryinformationprocess
+      - processdebugport
+      - processdebugflags
+      - processdebugobject
+      - wudf
+      - threadhidefromdebugger
+      - thread hide
+      - closehandle
+      - ntsystemdebugcontrol
+      - unhandledexcep
+      - outputdebugstring
+      - hardware breakpoint
+      - software breakpoint
+      - interupt
+      - trap flag
+      - page guard
+      - page exception
+      - parent process
+      - sedebuggprivilege
+      - sedebugprivilege
+      - ntqueryobject
+      - objecttypeinformation
+      - objectalltypes
+      - ntyieldexecution
+      - kerneldebugger
+      - kernel debugger
+      - kddebuggeren
+      - shareuserdata
+      - systemkerneldebugger
+      - write watch
+      - virtualalloc write
+      - process is in a job
+      - api hooks
+      - windbg
+      - ollydbg
+      - x64dbg
+      - x32dbg
+      - immunity
+
+  # ── Timing Attacks ────────────────────────────────────────────────────────────
+  # Covers: RDTSC delta, GetTickCount drift, QueryPerformanceCounter,
+  # sleep-patch detection, time-acceleration fingerprints.
+  - id: timing_attacks
+    name: Timing Attacks
+    weight: 0.20
+    keywords:
+      - rdtsc
+      - timing
+      - sleep
+      - time acceleration
+      - gettickcount
+      - queryperformancecounter
+      - queryperformance
+      - time delta
+      - tick count
+      - delay
+
+  # ── Resource Profiling ────────────────────────────────────────────────────────
+  # Covers: CPU/RAM/disk size realism, screen resolution, number of processors,
+  # user-activity indicators (recent docs, event log, installed apps).
+  - id: resource_profiling
+    name: Resource Profiling
+    weight: 0.15
+    keywords:
+      - number of processors
+      - physical memory
+      - disk size
+      - memory size
+      - ram
+      - cpu count
+      - core count
+      - screen resolution
+      - user activity
+      - recent files
+      - event log
+      - installed programs
+      - process list
+      - hard disk
+
+scoring:
+  detected_value: 0.0
+  not_detected_value: 1.0
+  error_behavior: exclude

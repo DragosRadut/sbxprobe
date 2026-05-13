@@ -1,0 +1,41 @@
+[Sun May 10 18:28:36 2026] [*] TLS process attach callback  -> 0
+[Sun May 10 18:28:36 2026] [*] TLS thread attach callback  -> 0
+[Sun May 10 18:28:36 2026] [*] Checking IsDebuggerPresent API  -> 0
+[Sun May 10 18:28:36 2026] [*] Checking PEB.BeingDebugged  -> 0
+[Sun May 10 18:28:36 2026] [*] Checking CheckRemoteDebuggerPresent API  -> 0
+[Sun May 10 18:28:36 2026] [*] Checking PEB.NtGlobalFlag  -> 0
+[Sun May 10 18:28:36 2026] [*] Checking ProcessHeap.Flags  -> 0
+[Sun May 10 18:28:36 2026] [*] Checking ProcessHeap.ForceFlags  -> 0
+[Sun May 10 18:28:36 2026] [*] Checking Low Fragmentation Heap -> 0
+[Sun May 10 18:28:36 2026] [*] Checking NtQueryInformationProcess with ProcessDebugPort  -> 0
+[Sun May 10 18:28:36 2026] [*] Checking NtQueryInformationProcess with ProcessDebugFlags  -> 0
+[Sun May 10 18:28:36 2026] [*] Checking NtQueryInformationProcess with ProcessDebugObject  -> 0
+[Sun May 10 18:28:36 2026] [*] Checking WudfIsAnyDebuggerPresent API  -> 0
+[Sun May 10 18:28:36 2026] [*] Checking WudfIsKernelDebuggerPresent API  -> 0
+[Sun May 10 18:28:36 2026] [*] Checking WudfIsUserDebuggerPresent API  -> 0
+[Sun May 10 18:28:36 2026] [*] Checking NtSetInformationThread with ThreadHideFromDebugger  -> 0
+[Sun May 10 18:28:36 2026] [*] Checking CloseHandle with an invalide handle  -> 0
+[Sun May 10 18:28:36 2026] [*] Checking NtSystemDebugControl -> 0
+[Sun May 10 18:28:36 2026] [*] Checking UnhandledExcepFilterTest  -> 0
+[Sun May 10 18:28:36 2026] [*] Checking OutputDebugString  -> 0
+[Sun May 10 18:28:36 2026] [*] Checking Hardware Breakpoints  -> 0
+[Sun May 10 18:28:36 2026] [*] Checking Software Breakpoints  -> 0
+[Sun May 10 18:28:36 2026] [*] Checking Interupt 0x2d  -> 0
+[Sun May 10 18:28:36 2026] [*] Checking Interupt 1  -> 0
+[Sun May 10 18:28:36 2026] [*] Checking trap flag -> 0
+[Sun May 10 18:28:36 2026] [*] Checking Memory Breakpoints PAGE GUARD  -> 0
+[Sun May 10 18:28:36 2026] [*] Checking If Parent Process is explorer.exe  -> 1
+[Sun May 10 18:28:36 2026] [*] Checking SeDebugPrivilege  -> 0
+[Sun May 10 18:28:36 2026] [*] Checking NtQueryObject with ObjectTypeInformation  -> 0
+[Sun May 10 18:28:36 2026] [*] Checking NtQueryObject with ObjectAllTypesInformation  -> 0
+[Sun May 10 18:28:37 2026] [*] Checking NtYieldExecution  -> 0
+[Sun May 10 18:28:37 2026] [*] Checking CloseHandle protected handle trick   -> 0
+[Sun May 10 18:28:37 2026] [*] Checking NtQuerySystemInformation with SystemKernelDebuggerInformation   -> 0
+[Sun May 10 18:28:37 2026] [*] Checking SharedUserData->KdDebuggerEnabled   -> 0
+[Sun May 10 18:28:37 2026] [*] Checking if process is in a job   -> 1
+[Sun May 10 18:28:37 2026] [*] Checking VirtualAlloc write watch (buffer only)  -> 0
+[Sun May 10 18:28:37 2026] [*] Checking VirtualAlloc write watch (API calls)  -> 0
+[Sun May 10 18:28:37 2026] [*] Checking VirtualAlloc write watch (IsDebuggerPresent)  -> 0
+[Sun May 10 18:28:37 2026] [*] Checking VirtualAlloc write watch (code write)  -> 0
+[Sun May 10 18:28:37 2026] [*] Checking for page exception breakpoints  -> 0
+[Sun May 10 18:28:37 2026] [*] Checking for API hooks outside module bounds  -> 0

@@ -1,0 +1,13 @@
+# 3rd party tools
+probes/
+
+# framework generated outputs
+reports/
+logs/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
