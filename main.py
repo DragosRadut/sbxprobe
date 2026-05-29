@@ -4,15 +4,16 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import List, Optional
 
+from _paths import output_root
 from config_loader import resolve_scenarios, DEFAULT_TOOLS_PATH
 from runner.adapters.alkhaser import AlKhaserAdapter
 from runner.adapters.pafish import PafishAdapter
 from parser.normalizer import AlKhaserParser, extract_alkhaser_version
 from parser.pafish_normalizer import PafishParser, extract_pafish_version
 from scoring.engine import ScoringEngine
-from reports.generator import ReportGenerator
-from reports.html_generator import HTMLReportGenerator
-from reports.combined_html import CombinedHTMLReportGenerator, ScenarioResult
+from reporting.generator import ReportGenerator
+from reporting.html_generator import HTMLReportGenerator
+from reporting.combined_html import CombinedHTMLReportGenerator, ScenarioResult
 
 
 def parse_args() -> argparse.Namespace:
@@ -36,8 +37,11 @@ def parse_args() -> argparse.Namespace:
         help=f"Path to tools.yaml (default: {DEFAULT_TOOLS_PATH})",
     )
     p.add_argument(
-        "--output-dir", default="reports",
-        help="Root directory for report output (default: reports/)",
+        "--output-dir", default=None,
+        help=(
+            "Root directory for report output. "
+            "Defaults to 'reports/' next to the executable."
+        ),
     )
     p.add_argument(
         "--categories", nargs="*", metavar="CAT_ID",
@@ -193,7 +197,6 @@ def _run_scenario(
 
     run_status = "partial" if worst_status in ("partial", "fatal") else "complete"
 
-    tool_count = sum(1 for r in all_parsed)
     print(f"\n[parser] Total checks : {len(check_results)}"
           + (f"  ({ignored} ignored — no keyword match)" if ignored else "")
           + (f"  [from {len(scenario['tools'])} tool(s)]" if len(scenario["tools"]) > 1 else ""))
@@ -253,6 +256,16 @@ def _run_scenario(
 def main() -> int:
     args = parse_args()
 
+    # Resolve output root: explicit arg → use as-is if absolute, else relative to
+    # output_root(). Default (no arg) → output_root()/reports.
+    if args.output_dir is not None:
+        out_base = Path(args.output_dir) if Path(args.output_dir).is_absolute() \
+                   else output_root() / args.output_dir
+    else:
+        out_base = output_root() / "reports"
+
+    log_base = output_root() / "logs"
+
     print(f"[sbxprobe] Resolving scenarios : {args.scenario}")
     print(f"[sbxprobe] Tools config        : {args.tools_config}")
     try:
@@ -280,8 +293,8 @@ def main() -> int:
         return 0
 
     run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    base_output = Path(args.output_dir) / args.env / run_id
-    base_log    = Path("logs") / args.env / run_id
+    base_output = out_base / args.env / run_id
+    base_log    = log_base / args.env / run_id
 
     print(f"[sbxprobe] Env       : {args.env}")
     print(f"[sbxprobe] Run ID    : {run_id}")

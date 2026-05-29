@@ -1,13 +1,14 @@
 import yaml
 from pathlib import Path
 
+from _paths import bundle_root
 from runner.adapters.alkhaser import VALID_CHECKS
 
-DEFAULT_TOOLS_PATH = "configs/tools.yaml"
-SCENARIOS_DIR = Path("configs/scenarios")
+DEFAULT_TOOLS_PATH = str(bundle_root() / "configs" / "tools.yaml")
+SCENARIOS_DIR = bundle_root() / "configs" / "scenarios"
 
 
-def resolve_scenarios(names: list, tools_path: str = DEFAULT_TOOLS_PATH) -> list:
+def resolve_scenarios(names: list, tools_path: str = None) -> list:
     """
     Resolve one or more scenario names to loaded scenario dicts.
 
@@ -17,28 +18,35 @@ def resolve_scenarios(names: list, tools_path: str = DEFAULT_TOOLS_PATH) -> list
       - "configs/scenarios/foo.yaml"→ explicit path (backward compat)
     Returns a list of loaded+merged scenario dicts, in discovery order.
     """
+    if tools_path is None:
+        tools_path = DEFAULT_TOOLS_PATH
+
+    scenarios_dir = bundle_root() / "configs" / "scenarios"
+
     if names == ["all"]:
-        paths = sorted(SCENARIOS_DIR.glob("*.yaml"))
+        paths = sorted(scenarios_dir.glob("*.yaml"))
         if not paths:
-            raise ValueError(f"No scenario YAML files found in {SCENARIOS_DIR}")
+            raise ValueError(f"No scenario YAML files found in {scenarios_dir}")
     else:
         paths = []
         for name in names:
             p = Path(name)
             if p.exists():
                 paths.append(p)
-            elif (SCENARIOS_DIR / f"{name}.yaml").exists():
-                paths.append(SCENARIOS_DIR / f"{name}.yaml")
+            elif (scenarios_dir / f"{name}.yaml").exists():
+                paths.append(scenarios_dir / f"{name}.yaml")
             else:
                 raise ValueError(
                     f"Scenario '{name}' not found. "
-                    f"Provide a file path or a name matching a file in {SCENARIOS_DIR}/."
+                    f"Provide a file path or a name matching a file in {scenarios_dir}/."
                 )
 
     return [load_scenario(str(p), tools_path) for p in paths]
 
 
-def load_scenario(scenario_path: str, tools_path: str = DEFAULT_TOOLS_PATH) -> dict:
+def load_scenario(scenario_path: str, tools_path: str = None) -> dict:
+    if tools_path is None:
+        tools_path = DEFAULT_TOOLS_PATH
     scenario = _load_yaml(scenario_path)
     tools_cfg = _load_yaml(tools_path)
     _merge_tools(scenario, tools_cfg)
@@ -65,7 +73,10 @@ def _merge_tools(scenario: dict, tools_cfg: dict):
 
     The executable and version always come from tools.yaml and cannot
     be overridden per scenario — they are managed in one place only.
+    Executable paths are resolved relative to bundle_root() so they
+    work correctly from both the dev tree and a PyInstaller bundle.
     """
+    root = bundle_root()
     for tool_name, scenario_tool in scenario.get("tools", {}).items():
         global_tool = tools_cfg.get(tool_name)
         if not global_tool:
@@ -74,8 +85,10 @@ def _merge_tools(scenario: dict, tools_cfg: dict):
                 f"Add it to configs/tools.yaml before using it."
             )
 
-        # executable and version: always from tools.yaml, not overridable per-scenario
-        scenario_tool["executable"] = global_tool["executable"]
+        # Resolve executable relative to bundle_root so it works in both
+        # dev mode (project root) and a frozen PyInstaller bundle (sys._MEIPASS).
+        raw_exe = global_tool["executable"]
+        scenario_tool["executable"] = str(root / Path(raw_exe))
         scenario_tool["version"]    = global_tool.get("version", "unknown")
 
         # timeout and sleep: scenario can override, otherwise fall back to tool defaults
