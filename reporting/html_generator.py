@@ -37,6 +37,9 @@ tr:hover td { background: #1e293b66; }
 .val-detected    { color: #ef4444; font-weight: bold; }
 .val-not_detected{ color: #4ade80; }
 .val-error       { color: #94a3b8; }
+.tool-badge { font-size: .72em; background: #334155; color: #94a3b8;
+              padding: 1px 6px; border-radius: 3px; white-space: nowrap; }
+.tool-badge.corroborated { background: #1e3a5f; color: #38bdf8; }
 
 .filters { margin-bottom: 8px; display: flex; gap: 6px; flex-wrap: wrap; }
 .filters button { background: #1e293b; color: #94a3b8; border: 1px solid #334155;
@@ -102,7 +105,9 @@ class HTMLReportGenerator:
         # ── category table rows ───────────────────────────────────────────────
         cat_rows = ""
         for cat in score.category_scores:
-            cs = f"{cat.score:.4f}" if cat.score is not None else "N/A"
+            cs         = f"{cat.score:.4f}" if cat.score is not None else "N/A"
+            dedup_cell = (f"<span style='color:#38bdf8'>{cat.dedup_count}</span>"
+                          if cat.dedup_count else "—")
             cat_rows += (
                 f"<tr>"
                 f"<td>{_e(cat.name)}</td>"
@@ -111,25 +116,28 @@ class HTMLReportGenerator:
                 f"<td>{cat.checks_count}</td>"
                 f"<td class='val-detected'>{cat.detected_count}</td>"
                 f"<td class='val-not_detected'>{cat.not_detected_count}</td>"
+                f"<td>{dedup_cell}</td>"
                 f"</tr>"
             )
 
         # ── checks table rows ─────────────────────────────────────────────────
         check_rows = ""
         for r in checks:
-            cls = f"val-{r.normalized}" if r.normalized in ("detected", "not_detected") else "val-error"
+            cls        = f"val-{r.normalized}" if r.normalized in ("detected", "not_detected") else "val-error"
+            badge_cls  = "tool-badge corroborated" if r.deduplicated else "tool-badge"
             check_rows += (
                 f"<tr data-status='{_e(r.normalized)}'>"
                 f"<td class='{cls}'>{_e(r.raw_value)}</td>"
                 f"<td>{_e(r.label)}</td>"
                 f"<td>{_e(r.category_name)}</td>"
-                f"<td>{_e(r.tool)}</td>"
+                f"<td><span class='{badge_cls}'>{_e(r.tool)}</span></td>"
                 f"</tr>"
             )
 
         total        = score.total_checks
         detected     = score.detected_count
         not_detected = score.not_detected_count
+        dedup_total  = score.dedup_count
 
         page = f"""<!DOCTYPE html>
 <html lang="en">
@@ -154,7 +162,8 @@ class HTMLReportGenerator:
   <div class="score-stats">
     Detection rate &nbsp; {score.detection_rate * 100:.1f}%<br>
     Detected &nbsp; {detected} &nbsp;/&nbsp; {total}<br>
-    Not detected &nbsp; {not_detected}
+    Not detected &nbsp; {not_detected}<br>
+    {f'Corroborated by both tools &nbsp; <span style="color:#38bdf8">{dedup_total}</span>' if dedup_total else ''}
   </div>
 </div>
 
@@ -163,7 +172,7 @@ class HTMLReportGenerator:
   <thead>
     <tr>
       <th>Category</th><th>Weight</th><th>Score</th>
-      <th>Checks</th><th>Detected</th><th>Clean</th>
+      <th>Checks</th><th>Detected</th><th>Clean</th><th title="Checks covered by both tools">Corroborated</th>
     </tr>
   </thead>
   <tbody>{cat_rows}</tbody>

@@ -1,6 +1,9 @@
 """
-Offline validation of the vm_checks scenario against known al-khaser output.
-Run with: python tests/test_vm_checks_scenario.py
+Smoke test: validate that the vm_checks scenario loads and parses correctly
+with the new flag-based architecture.
+
+Run with:  python -m pytest tests/test_vm_checks_scenario.py -v
+       or: python tests/test_vm_checks_scenario.py
 """
 
 import sys
@@ -11,242 +14,126 @@ import yaml
 from datetime import datetime, timezone
 
 from parser.normalizer import AlKhaserParser, DETECTED, NOT_DETECTED
-from scoring.engine import ScoringEngine
+from scoring.engine import ScoringEngine, deduplicate_checks
 from runner.executor import ExecutionResult
 
+# Subset of real al-khaser v0.82 output for the VBOX + GEN_SANDBOX flags
 SAMPLE_OUTPUT = """
-[al-khaser version 0.81]
--------------------------[Initialisation]-------------------------
+[al-khaser version 0.82]
+-------------------------[Generic Sandbox/VM Detection]-------------------------
+[*] Checking if process loaded modules contains: avghookx.dll                  [ GOOD ]
+[*] Checking if process loaded modules contains: sbiedll.dll                   [ GOOD ]
+[*] Checking if process file name contains: sample.exe                         [ GOOD ]
+[*] Checking if username matches : Sandbox                                     [ GOOD ]
+[*] Checking if hostname matches : SANDBOX                                     [ GOOD ]
+[*] Checking Number of processors in machine                                   [ GOOD ]
 
-[*] You are running: Microsoft Windows 10  (build 19045) 64-bit
-[*] All APIs present and accounted for.
-Process is running under WOW64
-
-
--------------------------[TLS Callbacks]-------------------------
-[*] TLS process attach callback                                                                    [ GOOD ]
-[*] TLS thread attach callback                                                                     [ GOOD ]
-
--------------------------[Debugger Detection]-------------------------
-[*] Checking IsDebuggerPresent API                                                                 [ GOOD ]
-[*] Checking PEB.BeingDebugged                                                                     [ GOOD ]
-[*] Checking CheckRemoteDebuggerPresent API                                                        [ GOOD ]
-[*] Checking PEB.NtGlobalFlag                                                                      [ GOOD ]
-[*] Checking ProcessHeap.Flags                                                                     [ GOOD ]
-[*] Checking ProcessHeap.ForceFlags                                                                [ GOOD ]
-[*] Checking Low Fragmentation Heap                                                                [ GOOD ]
-[*] Checking NtQueryInformationProcess with ProcessDebugPort                                       [ GOOD ]
-[*] Checking NtQueryInformationProcess with ProcessDebugFlags                                      [ GOOD ]
-[*] Checking NtQueryInformationProcess with ProcessDebugObject                                     [ GOOD ]
-[*] Checking WudfIsAnyDebuggerPresent API                                                          [ GOOD ]
-[*] Checking WudfIsKernelDebuggerPresent API                                                       [ GOOD ]
-[*] Checking WudfIsUserDebuggerPresent API                                                         [ GOOD ]
-[*] Checking NtSetInformationThread with ThreadHideFromDebugger                                    [ GOOD ]
-[*] Checking CloseHandle with an invalide handle                                                   [ GOOD ]
-[*] Checking NtSystemDebugControl                                                                  [ GOOD ]
-[*] Checking UnhandledExcepFilterTest                                                              [ GOOD ]
-[*] Checking OutputDebugString                                                                     [ GOOD ]
-[*] Checking Hardware Breakpoints                                                                  [ GOOD ]
-[*] Checking Software Breakpoints                                                                  [ GOOD ]
-[*] Checking Interupt 0x2d                                                                         [ GOOD ]
-[*] Checking Interupt 1                                                                            [ GOOD ]
-[*] Checking trap flag                                                                             [ GOOD ]
-[*] Checking Memory Breakpoints PAGE GUARD                                                         [ GOOD ]
-[*] Checking If Parent Process is explorer.exe                                                     [ BAD  ]
-[*] Checking SeDebugPrivilege                                                                      [ GOOD ]
-[*] Checking NtQueryObject with ObjectTypeInformation                                              [ GOOD ]
-[*] Checking NtQueryObject with ObjectAllTypesInformation                                          [ GOOD ]
-[*] Checking NtYieldExecution                                                                      [ GOOD ]
-[*] Checking CloseHandle protected handle trick                                                    [ GOOD ]
-[*] Checking NtQuerySystemInformation with SystemKernelDebuggerInformation                         [ GOOD ]
-[*] Checking SharedUserData->KdDebuggerEnabled                                                     [ GOOD ]
-[*] Checking if process is in a job                                                                [ BAD  ]
-[*] Checking VirtualAlloc write watch (buffer only)                                                [ GOOD ]
-[*] Checking VirtualAlloc write watch (API calls)                                                  [ GOOD ]
-[*] Checking VirtualAlloc write watch (IsDebuggerPresent)                                          [ GOOD ]
-[*] Checking VirtualAlloc write watch (code write)                                                 [ GOOD ]
-[*] Checking for page exception breakpoints                                                        [ GOOD ]
-[*] Checking for API hooks outside module bounds                                                   [ GOOD ]
-
--------------------------[DLL Injection Detection]-------------------------
-[*] Enumerating modules with EnumProcessModulesEx [32-bit]                                         [ GOOD ]
-[*] Enumerating modules with EnumProcessModulesEx [64-bit]                                         [ GOOD ]
-[*] Enumerating modules with EnumProcessModulesEx [ALL]                                            [ GOOD ]
-[*] Enumerating modules with ToolHelp32                                                            [ GOOD ]
-[*] Enumerating the process LDR via LdrEnumerateLoadedModules                                      [ GOOD ]
-[*] Enumerating the process LDR directly                                                           [ GOOD ]
-[*] Walking process memory with GetModuleInformation                                               [ GOOD ]
-[*] Walking process memory for hidden modules
-
- [!] Running on WoW64, there will be false positives due to wow64 DLLs.
- [!] Executable at 77CB0000
-[ BAD  ]
-[*] Walking process memory for .NET module structures                                              [ GOOD ]
-
--------------------------[Generic Sandboxe/VM Detection]-------------------------
-[*] Checking if process loaded modules contains: avghookx.dll                                      [ GOOD ]
-[*] Checking if process loaded modules contains: avghooka.dll                                      [ GOOD ]
-[*] Checking if process loaded modules contains: snxhk.dll                                         [ GOOD ]
-[*] Checking if process loaded modules contains: sbiedll.dll                                       [ GOOD ]
-[*] Checking if process loaded modules contains: dbghelp.dll                                       [ GOOD ]
-[*] Checking if process loaded modules contains: api_log.dll                                       [ GOOD ]
-[*] Checking if process loaded modules contains: dir_watch.dll                                     [ GOOD ]
-[*] Checking if process loaded modules contains: pstorec.dll                                       [ GOOD ]
-[*] Checking if process loaded modules contains: vmcheck.dll                                       [ GOOD ]
-[*] Checking if process loaded modules contains: wpespy.dll                                        [ GOOD ]
-[*] Checking if process loaded modules contains: cmdvrt64.dll                                      [ GOOD ]
-[*] Checking if process loaded modules contains: cmdvrt32.dll                                      [ GOOD ]
-[*] Checking if process file name contains: sample.exe                                             [ GOOD ]
-[*] Checking if process file name contains: bot.exe                                                [ GOOD ]
-[*] Checking if process file name contains: sandbox.exe                                            [ GOOD ]
-[*] Checking if process file name contains: malware.exe                                            [ GOOD ]
-[*] Checking if process file name contains: test.exe                                               [ GOOD ]
-[*] Checking if process file name contains: klavme.exe                                             [ GOOD ]
-[*] Checking if process file name contains: myapp.exe                                              [ GOOD ]
-[*] Checking if process file name contains: testapp.exe                                            [ GOOD ]
-[*] Checking if process file name looks like a hash: al-khaser_x86                                 [ GOOD ]
-[*] Checking if username matches : CurrentUser                                                     [ GOOD ]
-[*] Checking if username matches : Sandbox                                                         [ GOOD ]
-[*] Checking if username matches : Emily                                                           [ GOOD ]
-[*] Checking if username matches : HAPUBWS                                                         [ GOOD ]
-[*] Checking if username matches : Hong Lee                                                        [ GOOD ]
-[*] Checking if username matches : IT-ADMIN                                                        [ GOOD ]
-[*] Checking if username matches : Johnson                                                         [ GOOD ]
-[*] Checking if username matches : Miller                                                          [ GOOD ]
-[*] Checking if username matches : milozs                                                          [ GOOD ]
-[*] Checking if username matches : Peter Wilson                                                    [ GOOD ]
-[*] Checking if username matches : timmy                                                           [ GOOD ]
-[*] Checking if username matches : user                                                            [ GOOD ]
-[*] Checking if username matches : sand box                                                        [ GOOD ]
-[*] Checking if username matches : malware                                                         [ GOOD ]
-[*] Checking if username matches : maltest                                                         [ GOOD ]
-[*] Checking if username matches : test user                                                       [ GOOD ]
-[*] Checking if username matches : virus                                                           [ GOOD ]
-[*] Checking if username matches : John Doe                                                        [ GOOD ]
-[*] Checking if hostname matches : SANDBOX                                                         [ GOOD ]
-[*] Checking if hostname matches : 7SILVIA                                                         [ GOOD ]
-[*] Checking if hostname matches : HANSPETER-PC                                                    [ GOOD ]
-[*] Checking if hostname matches : JOHN-PC                                                         [ GOOD ]
-[*] Checking if hostname matches : MUELLER-PC                                                      [ GOOD ]
-[*] Checking if hostname matches : WIN7-TRAPS                                                      [ GOOD ]
-[*] Checking if hostname matches : FORTINET                                                        [ GOOD ]
-[*] Checking if hostname matches : TEQUILABOOMBOOM                                                 [ GOOD ]
-[*] Checking whether username is 'Wilber' and NetBIOS name starts with 'SC' or 'SW'                [ GOOD ]
-[*] Checking whether username is 'admin' and NetBIOS name is 'SystemIT'                            [ GOOD ]
-[*] Checking whether username is 'admin' and DNS hostname is 'KLONE_X64-PC'                        [ GOOD ]
-[*] Checking whether username is 'John' and two sandbox files exist                                [ GOOD ]
-[*] Checking whether four known sandbox 'email' file paths exist                                   [ GOOD ]
-[*] Checking whether three known sandbox 'foobar' files exist                                      [ GOOD ]
-[*] Checking processes looking-glass-host.exe                                                      [ GOOD ]
-[*] Checking processes VDDSysTray.exe                                                              [ GOOD ]
-[*] Checking Number of processors in machine                                                       [ GOOD ]
-[*] Checking Interupt Descriptor Table location                                                    [ GOOD ]
-[*] Checking Local Descriptor Table location                                                       [ GOOD ]
+-------------------------[VirtualBox Detection]-------------------------
+[*] Checking reg key HARDWARE\\ACPI\\DSDT\\VBOX__                               [ BAD  ]
+[*] Checking reg key HARDWARE\\ACPI\\FADT\\VBOX__                               [ BAD  ]
+[*] Checking reg key HARDWARE\\ACPI\\RSDT\\VBOX__                               [ BAD  ]
+[*] Checking if CPU hypervisor field is set using cpuid(0x1)                   [ BAD  ]
+[*] Checking hypervisor vendor using cpuid(0x40000000)                        [ BAD  ]
+[*] Checking ACPI table strings                                                [ BAD  ]
+[*] Checking VirtualBox Guest Additions directory                              [ GOOD ]
+[*] Checking file C:\\Windows\\System32\\drivers\\VBoxMouse.sys                 [ GOOD ]
+[*] Checking VirtualBox process vboxservice.exe                                [ GOOD ]
 """
 
 
 def _load_scenario():
-    with open("configs/scenarios/vm_checks.yaml", encoding="utf-8") as f:
+    path = os.path.join(
+        os.path.dirname(os.path.dirname(__file__)),
+        "configs", "scenarios", "vm_checks.yaml"
+    )
+    with open(path, encoding="utf-8") as f:
         return yaml.safe_load(f)
 
 
 def _make_exec_result(stdout: str) -> ExecutionResult:
     return ExecutionResult(
-        check_id="test",
-        tool="al-khaser_x86.exe",
-        return_code=0,
-        stdout=stdout,
-        stderr="",
-        runtime_seconds=1.0,
+        check_id="test", tool="al-khaser_x86.exe", return_code=0,
+        stdout=stdout, stderr="", runtime_seconds=1.0,
         timestamp=datetime.now(timezone.utc).isoformat(),
         environment_label="test_env",
     )
 
 
-def test_only_vm_checks_captured():
-    """
-    With a vm_checks-only scenario, anti-debug and DLL-injection lines from
-    al-khaser fall into 'uncategorized' (zero weight) rather than being scored.
-    This test confirms that no non-VM check is misclassified INTO vm_checks.
-    """
+def test_scenario_loads():
     scenario = _load_scenario()
-    parser = AlKhaserParser(categories=scenario["categories"])
-    results = parser.parse(_make_exec_result(SAMPLE_OUTPUT))
-
-    vm = [r for r in results if r.category_id == "vm_checks"]
-    uncategorized = [r for r in results if r.category_id == "uncategorized"]
-
-    assert len(vm) > 0, "No vm_checks results captured at all"
-    print(f"  vm_checks      : {len(vm)}")
-    print(f"  uncategorized  : {len(uncategorized)}  (excluded from score — correct)")
+    assert scenario["scenario_id"] == "vm_checks_001"
+    cats = scenario["categories"]
+    assert len(cats) == 1
+    assert cats[0]["id"] == "vm_checks"
+    assert cats[0].get("alkhaser_flags"), "vm_checks category must have alkhaser_flags"
+    print(f"  alkhaser_flags: {cats[0]['alkhaser_flags']}")
 
 
-def test_debug_checks_not_scored():
-    """
-    Anti-debug checks must land in 'uncategorized', not in 'vm_checks',
-    so they contribute nothing to the transparency score.
-    """
+def test_all_checks_assigned_to_vm_checks():
+    """With flag-based assignment, every parsed check goes to vm_checks."""
     scenario = _load_scenario()
-    parser = AlKhaserParser(categories=scenario["categories"])
-    results = parser.parse(_make_exec_result(SAMPLE_OUTPUT))
+    cat      = scenario["categories"][0]
+    parser   = AlKhaserParser(category_id=cat["id"], category_name=cat["name"])
+    results  = parser.parse(_make_exec_result(SAMPLE_OUTPUT))
 
-    misclassified = [
-        r for r in results
-        if r.category_id == "vm_checks"
-        and ("isdebuggerpresent" in r.label.lower()
-             or "peb.being" in r.label.lower()
-             or "breakpoints" in r.label.lower())
-    ]
-    assert not misclassified, (
-        f"Anti-debug checks leaked into vm_checks scoring: "
-        + str([r.label for r in misclassified])
-    )
-    print("  Anti-debug checks correctly excluded from vm_checks score")
+    assert results, "No results parsed"
+    assert all(r.category_id == "vm_checks" for r in results), \
+        "All results must be assigned to vm_checks"
+    print(f"  Parsed {len(results)} checks, all → vm_checks")
 
 
-def test_score_computed():
+def test_detected_and_not_detected_present():
     scenario = _load_scenario()
-    parser = AlKhaserParser(categories=scenario["categories"])
-    results = parser.parse(_make_exec_result(SAMPLE_OUTPUT))
+    cat      = scenario["categories"][0]
+    parser   = AlKhaserParser(category_id=cat["id"], category_name=cat["name"])
+    results  = parser.parse(_make_exec_result(SAMPLE_OUTPUT))
+
+    detected     = [r for r in results if r.normalized == DETECTED]
+    not_detected = [r for r in results if r.normalized == NOT_DETECTED]
+
+    assert detected,     "No detected checks found in VirtualBox sample"
+    assert not_detected, "No not-detected checks found in sample"
+    print(f"  detected={len(detected)}  not_detected={len(not_detected)}")
+
+
+def test_score_in_range():
+    scenario = _load_scenario()
+    cat      = scenario["categories"][0]
+    parser   = AlKhaserParser(category_id=cat["id"], category_name=cat["name"])
+    results  = parser.parse(_make_exec_result(SAMPLE_OUTPUT))
 
     engine = ScoringEngine(scenario["scoring"])
     report = engine.score(results, scenario["categories"])
 
-    assert report.global_score is not None
+    assert report.global_score is not None, "Score must not be None"
     assert 0.0 <= report.global_score <= 1.0
-    print(f"  Global score: {report.global_score:.4f}")
-    print(f"  Detected: {report.detected_count}  Not detected: {report.not_detected_count}")
+    print(f"  Score={report.global_score:.4f}  Risk={report.risk_level}  "
+          f"Detected={report.detected_count}/{report.total_checks}")
 
 
-def test_coverage_report():
+def test_deduplication_does_not_affect_single_tool():
+    """Deduplication on single-tool results must leave count unchanged."""
     scenario = _load_scenario()
-    parser = AlKhaserParser(categories=scenario["categories"])
-    results = parser.parse(_make_exec_result(SAMPLE_OUTPUT))
+    cat      = scenario["categories"][0]
+    parser   = AlKhaserParser(category_id=cat["id"], category_name=cat["name"])
+    results  = parser.parse(_make_exec_result(SAMPLE_OUTPUT))
 
-    uncategorized = [r for r in results if r.category_id == "uncategorized"]
-    vm = [r for r in results if r.category_id == "vm_checks"]
-
-    print(f"\n  vm_checks captured  : {len(vm)}")
-    print(f"  uncategorized       : {len(uncategorized)}")
-
-    if uncategorized:
-        print("  Uncategorized labels (add keywords if these are VM-related):")
-        for r in uncategorized:
-            print(f"    - {r.label}")
-
-    print("\n  vm_checks labels captured:")
-    for r in vm:
-        status = "BAD " if r.normalized == DETECTED else "GOOD"
-        print(f"    [{status}] {r.label}")
+    deduped = deduplicate_checks(results)
+    assert len(deduped) == len(results), \
+        "Single-tool results should not be reduced by deduplication"
+    assert not any(r.deduplicated for r in deduped), \
+        "No check should be marked deduplicated when only one tool ran"
 
 
 if __name__ == "__main__":
-    print("-- test_only_vm_checks_captured")
-    test_only_vm_checks_captured()
-    print("-- test_debug_checks_not_scored")
-    test_debug_checks_not_scored()
-    print("-- test_score_computed")
-    test_score_computed()
-    print("-- test_coverage_report")
-    test_coverage_report()
+    tests = [
+        test_scenario_loads,
+        test_all_checks_assigned_to_vm_checks,
+        test_detected_and_not_detected_present,
+        test_score_in_range,
+        test_deduplication_does_not_affect_single_tool,
+    ]
+    for t in tests:
+        print(f"-- {t.__name__}")
+        t()
     print("\nAll tests passed.")

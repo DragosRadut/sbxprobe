@@ -71,6 +71,7 @@ class ReportGenerator:
                     "raw_value": r.raw_value,
                     "normalized": r.normalized,
                     "tool": r.tool,
+                    "deduplicated": r.deduplicated,
                     "timestamp": r.timestamp,
                     "environment_label": r.environment_label,
                     "runtime_seconds": r.runtime_seconds,
@@ -86,8 +87,8 @@ class ReportGenerator:
         out_file = self.out / "checks.csv"
         fieldnames = [
             "check_id", "label", "category_id", "category_name",
-            "raw_value", "normalized", "tool", "timestamp",
-            "environment_label", "runtime_seconds",
+            "raw_value", "normalized", "tool", "deduplicated",
+            "timestamp", "environment_label", "runtime_seconds",
         ]
         with out_file.open("w", newline="", encoding="utf-8") as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
@@ -101,6 +102,7 @@ class ReportGenerator:
                     "raw_value": r.raw_value,
                     "normalized": r.normalized,
                     "tool": r.tool,
+                    "deduplicated": r.deduplicated,
                     "timestamp": r.timestamp,
                     "environment_label": r.environment_label,
                     "runtime_seconds": r.runtime_seconds,

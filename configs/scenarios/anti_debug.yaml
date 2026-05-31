@@ -1,122 +1,57 @@
 scenario_id: anti_debug_001
 scenario_name: Anti-Debug Checks
 description: >
-  Evaluates how detectable the environment is to anti-debugging probes.
-  Covers: Windows API checks (IsDebuggerPresent, CheckRemoteDebuggerPresent,
-  WudfIs*DebuggerPresent), PEB flag inspection (BeingDebugged, NtGlobalFlag),
-  heap flag tricks (Flags, ForceFlags, LFH), NtQueryInformationProcess variants
-  (ProcessDebugPort, ProcessDebugFlags, ProcessDebugObject), handle tricks
-  (CloseHandle/NtClose, SetHandleInformation), thread hiding, exception-based
-  detection (UnhandledExceptionFilter, OutputDebugString), breakpoint probes
-  (hardware, software, memory/PAGE_GUARD, page exception), interrupt tricks
-  (0x2D, 0x1), trap flag, parent process check, SeDebugPrivilege, kernel
-  debugger detection (KdDebuggerEnabled, SharedUserData,
-  SystemKernelDebuggerInformation), NtQueryObject, NtYieldExecution /
-  SwitchToThread, write-watch, job object, API hook detection, known debugger
-  process enumeration, and TLS callbacks.
-  Uses al-khaser as the sole probe backend.
-version: "1.0"
+  Focused evaluation of debugger-detection surface.  Covers TLS callbacks,
+  PEB flags, NtQuery* APIs, handle tricks, breakpoint probes (hardware,
+  software, memory PAGE_GUARD, page exception), interrupt tricks, kernel
+  debugger checks, write-watch, job object, and API hook detection.
+  Al-khaser uses DEBUG and TLS flags; pafish contributes its debugger section.
+version: "2.0"
 
 tools:
   alkhaser:
     timeout: 120
     sleep: 5
-    checks:
-      - DEBUG
-      - TLS
+  pafish:
+    timeout: 60
 
 categories:
   - id: anti_debug
     name: Anti-Debug Checks
     weight: 1.0
-    keywords:
-      # ── Windows API checks ──────────────────────────────────────────────────
-      - isdebuggerpresent
-      - checkremotedebuggerpresent
-      - beingdebugged
-      - ntglobalflag
-      - peb
+    alkhaser_flags:
+      - DEBUG
+      - TLS
+    pafish: true
 
-      # ── WUDF debugger checks ─────────────────────────────────────────────────
-      - wudf
-
-      # ── Heap flag tricks ────────────────────────────────────────────────────
-      - processheap
-      - heap flag
-      - heap force
-      - low fragmentation heap
-
-      # ── NtQueryInformationProcess variants ─────────────────────────────────
-      - ntqueryinformationprocess
-      - processdebugport
-      - processdebugflags
-      - processdebugobject
-      - processdebug
-
-      # ── Handle tricks ────────────────────────────────────────────────────────
-      - closehandle
-      - ntclose
-      - sethandleinformation
-      - protected handle
-      - ntsystemdebugcontrol
-
-      # ── Thread hiding ────────────────────────────────────────────────────────
-      - threadhidefromdebugger
-      - thread hide
-
-      # ── Exception-based detection ───────────────────────────────────────────
-      - unhandledexcep
-      - outputdebugstring
-
-      # ── Breakpoint detection ─────────────────────────────────────────────────
-      - hardware breakpoint
-      - software breakpoint
-      - memory breakpoint
-      - page guard
-      - page exception
-      - interupt
-      - interrupt
-
-      # ── Interrupt tricks ─────────────────────────────────────────────────────
-      - int 0x2d
-      - int 0x1
-      - trap flag
-
-      # ── Context / privileges ────────────────────────────────────────────────
-      - parent process
-      - sedebuggprivilege
-      - sedebugprivilege
-      - csrss
-
-      # ── Kernel / object queries ─────────────────────────────────────────────
-      - ntqueryobject
-      - objecttypeinformation
-      - objectalltypes
-      - ntyieldexecution
-      - switchtothread
-      - kerneldebugger
-      - kernel debugger
-      - kddebuggeren
-      - shareuserdata
-      - systemkerneldebugger
-
-      # ── Memory-based tricks ──────────────────────────────────────────────────
-      - write watch
-      - virtualalloc write
-
-      # ── Job object / API hooks ───────────────────────────────────────────────
-      - process is in a job
-      - api hooks
-
-      # ── TLS callbacks ────────────────────────────────────────────────────────
-      - tls
-
-      # ── Known debugger processes ─────────────────────────────────────────────
-      - windbg
-      - ollydbg
-      - x64dbg
-      - x32dbg
-      - immunity
+# For this focused scenario all pafish output goes to anti_debug.
+# (Pafish's VM artifact checks are intentionally captured here so that
+#  none of its results are silently discarded in a focused run.)
+pafish_keywords:
+  anti_debug:
+    - debugger
+    - debug
+    - cpu
+    - registry
+    - process
+    - file
+    - disk
+    - memory
+    - screen
+    - mouse
+    - mac
+    - bios
+    - acpi
+    - generic
+    - network
+    - system
+    - rdtsc
+    - wine
+    - virtualbox
+    - vmware
+    - qemu
+    - kvm
+    - hypervisor
 
 scoring:
   detected_value: 0.0

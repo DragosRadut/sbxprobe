@@ -1,18 +1,23 @@
 scenario_id: vm_checks_001
 scenario_name: VM Detection Checks
 description: >
-  Evaluates how visible the target environment is to virtualisation fingerprinting.
-  Covers CPUID/hypervisor probes, VMware and VirtualBox artifact checks (registry,
-  files, processes, MAC addresses, backdoor port), and generic sandbox artifact
-  detection (DLL names, process names, username/hostname blacklists, file paths).
-  Uses al-khaser as the sole probe backend.
-version: "1.0"
+  Focused evaluation of hypervisor and sandbox fingerprinting surface.
+  Al-khaser runs with all VM-relevant flag groups; pafish adds corroborating
+  coverage of the same artifact set.  Overlapping results are deduplicated.
+version: "2.0"
 
 tools:
   alkhaser:
     timeout: 300
     sleep: 5
-    checks:
+  pafish:
+    timeout: 60
+
+categories:
+  - id: vm_checks
+    name: VM Detection Checks
+    weight: 1.0
+    alkhaser_flags:
       - GEN_SANDBOX
       - VBOX
       - VMWARE
@@ -23,204 +28,33 @@ tools:
       - WINE
       - PARALLELS
       - HYPERV
+    pafish: true
 
-  pafish:
-    timeout: 60
-    # pafish runs all checks automatically — no --check flags
-
-categories:
-  - id: vm_checks
-    name: VM Detection Checks
-    weight: 1.0
-    keywords:
-      # ── CPUID / hypervisor bit ──────────────────────────────────────────────
-      - cpuid
-      - hypervisor
-      - red pill
-      - no pill
-      - descriptor table
-      - interrupt descriptor
-      - local descriptor
-      - task register
-
-      # ── Registry / BIOS fingerprinting ─────────────────────────────────────
-      - systembiosdate
-      - description\system
-      - systeminformation
-      - smbios
-      - acpi
-      - vm strings
-      - scsi port
-      - ven_
-      - ntquerylicensevalue
-      - windows is genuine
-
-      # ── CPUID vendor strings ────────────────────────────────────────────────
-      - kvmkvmkvm
-      - microsoft hv
-      - vmwarevmware
-      - xenvmmxenvmm
-      - prl hyperv
-      - vboxvboxvbox
-
-      # ── VMware-specific artifacts ───────────────────────────────────────────
-      - vmware
-      - backdoor
-      - vm communication interface
-      - vmtoolsd
-      - vmtools
-      - vmacthlp
-      - vmwaretray
-      - vmwareuser
-      - vgauthservice
-      - vmsrvc
-      - vmusrvc
-      # VMware kernel drivers (files + devices)
-      - vmnet
-      - vmmouse
-      - vmusb
-      - vm3dmp
-      - vmci
-      - vmhgfs
-      - vmmemctl
-      - vmx86
-      - vmrawdsk
-      - vmusbmouse
-      - vmkdb
-      - vmnetuserif
-      - vmnetadapter
-      - hgfs
-      - vm driver
-
-      # ── VirtualBox-specific artifacts ───────────────────────────────────────
-      - virtualbox
-      - vbox
-      - innotek
-      - vboxservice
-      - vboxtray
-      - vboxguest
-      - vboxmrxnp
-      - vboxdisp
-      - vboxhook
-      - vboxogl
-      - vboxsf
-      - vboxvideo
-      - vboxdrv
-
-      # ── QEMU-specific artifacts ─────────────────────────────────────────────
-      - qemu
-      - vdagent
-      - vdservice
-
-      # ── KVM / VirtIO artifacts ──────────────────────────────────────────────
-      - kvm
-      - balloon
-      - netkvm
-      - pvpanic
-      - viofs
-      - viogpudo
-      - vioinput
-      - viorng
-      - vioscsi
-      - vioser
-      - viostor
-      - virtio
-
-      # ── Xen artifacts ──────────────────────────────────────────────────────
-      - xen
-      - xenservice
-
-      # ── Wine artifacts ──────────────────────────────────────────────────────
-      - wine
-
-      # ── Parallels artifacts ─────────────────────────────────────────────────
-      - parallels
-      - prl_cc
-      - prl_tools
-
-      # ── Virtual PC artifacts ────────────────────────────────────────────────
-      - virtual machine
-      - vpcext
-
-      # ── Hyper-V artifacts ───────────────────────────────────────────────────
-      - hyper-v
-      - hyperv
-      - global objects
-
-      # ── Other hypervisor / emulator platforms ──────────────────────────────
-      - bochs
-
-      # ── WMI-based hardware sensor checks (absent in VMs) ───────────────────
-      - wmi
-      - voltageprobe
-      - voltagesensor
-      - win32_
-      - cim_
-      - power capabilities
-
-      # ── MAC address / NIC fingerprinting ────────────────────────────────────
-      - mac address
-      - mac starting
-      - hybrid analysis
-
-      # ── Generic sandbox DLL/module artifact checks ──────────────────────────
-      - loaded modules contains
-      - snxhk
-      - sbiedll
-      - avghookx
-      - avghooka
-      - api_log
-      - dir_watch
-      - pstorec
-      - vmcheck
-      - wpespy
-      - cmdvrt
-      - dbghelp
-
-      # ── Sandbox process/filename artifact checks ────────────────────────────
-      - process file name contains
-      - process file name looks
-      - checking processes
-      - looking-glass
-      - vddsystray
-      - fiddler
-      - wireshark
-      - process monitor
-      - procmon
-
-      # ── Username / hostname blacklists ──────────────────────────────────────
-      - username matches
-      - hostname matches
-      - username is
-      - netbios name
-      - dns hostname
-      - sand box
-      - sandbox
-
-      # ── Known sandbox file-path / environment checks ────────────────────────
-      - file paths exist
-      - foobar
-      - email
-      - john
-
-      # ── Hardware realism checks ─────────────────────────────────────────────
-      - number of processors
-      - disk size
-      - memory space
-      - setupdi
-
-      # ── Behavioral / timing sandbox indicators ──────────────────────────────
-      - mouse movement
-      - user input
-      - hosted on cloud
-      - time has been accelerated
-
-      # ── pafish-specific labels not covered by al-khaser keywords ────────────
-      - rdtsc
-      - hard disk
-      - total physical
-      - computer name
-      - screen resolution
+pafish_keywords:
+  vm_checks:
+    - cpu
+    - registry
+    - process
+    - file
+    - disk
+    - memory
+    - screen
+    - mouse
+    - mac
+    - bios
+    - acpi
+    - generic
+    - network
+    - system
+    - rdtsc
+    - wine
+    - virtualbox
+    - vmware
+    - qemu
+    - kvm
+    - hypervisor
+    - debugger
+    - debug
 
 scoring:
   detected_value: 0.0

@@ -1,66 +1,54 @@
 scenario_id: timing_attacks_001
 scenario_name: Timing Attacks
 description: >
-  Evaluates how detectable the environment is to timing-based anti-sandbox
-  probes. Covers RDTSC delta measurement (plain and Locky variant using
-  GetProcessHeap + CloseHandle), Sleep/SleepEx/NtDelayExecution acceleration
-  detection, looped-sleep drift, GetTickCount time-acceleration check,
-  SetTimer and timeSetEvent (multimedia timers), WaitForSingleObject and
-  WaitForMultipleObjects variants, IcmpSendEcho (CCleaner malware technique),
-  CreateWaitableTimer, and CreateTimerQueueTimer.
-  Uses al-khaser as the sole probe backend.
-version: "1.0"
+  Focused evaluation of timing-based anti-sandbox evasion surface.
+  Covers RDTSC delta (plain and Locky variant), NtDelayExecution / Sleep
+  acceleration, GetTickCount drift, SetTimer, timeSetEvent, WaitForSingleObject,
+  WaitForMultipleObjects, IcmpSendEcho, CreateWaitableTimer,
+  and CreateTimerQueueTimer.
+  Al-khaser uses the TIMING_ATTACKS flag; pafish contributes RDTSC checks.
+version: "2.0"
 
 tools:
   alkhaser:
     timeout: 120
     sleep: 5
-    checks:
-      - TIMING_ATTACKS
+  pafish:
+    timeout: 60
 
 categories:
   - id: timing_attacks
     name: Timing Attacks
     weight: 1.0
-    keywords:
-      # ── RDTSC variants ───────────────────────────────────────────────────────
-      - rdtsc
-      - locky
+    alkhaser_flags:
+      - TIMING_ATTACKS
+    pafish: true
 
-      # ── Sleep / delay functions ──────────────────────────────────────────────
-      - sleep
-      - sleepex
-      - ntdelayexecution
-
-      # ── Time-acceleration detection ──────────────────────────────────────────
-      - time has been accelerated
-      - time acceleration
-      - gettickcount
-      - tick count
-
-      # ── Timer functions ──────────────────────────────────────────────────────
-      - settimer
-      - timesetevent
-      - multimedia
-      - createwaitabletimer
-      - createtimerqueuetimer
-
-      # ── Wait functions ───────────────────────────────────────────────────────
-      - waitforsingleobject
-      - waitformultipleobject
-      - ntwaitforsingleobject
-      - ntwaitformultipleobject
-
-      # ── Network timing (IcmpSendEcho / CCleaner) ─────────────────────────────
-      - icmpsendecho
-      - icmp
-
-      # ── Generic timing / performance counters ────────────────────────────────
-      - queryperformancecounter
-      - queryperformance
-      - time delta
-      - timing
-      - delay
+pafish_keywords:
+  timing_attacks:
+    - rdtsc
+    - cpu
+    - registry
+    - process
+    - file
+    - disk
+    - memory
+    - screen
+    - mouse
+    - mac
+    - bios
+    - acpi
+    - generic
+    - network
+    - system
+    - wine
+    - virtualbox
+    - vmware
+    - qemu
+    - kvm
+    - hypervisor
+    - debugger
+    - debug
 
 scoring:
   detected_value: 0.0
