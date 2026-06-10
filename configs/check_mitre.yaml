@@ -778,7 +778,7 @@ walking_process_memory_for_hidden_modules:
     loaded without updating the loader's linked list — a common debugger stealth technique.
 
 # ── pafish anti-debug ─────────────────────────────────────────────
-using_isdebuggerPresent:
+using_isdebuggerpresent:
   mitre: "T1622"
   checkpoint: "https://evasions.checkpoint.com/src/Anti-Debug/techniques/debug-flags.html"
   description: >
@@ -1067,3 +1067,703 @@ checking_process_of_malware_analysis_tool_lordpe_exe:
   description: >
     LordPE is a PE editor and process dumper; its presence indicates an attempt to
     dump or inspect the malware's PE image in memory.
+
+# ── Additional analysis tools (al-khaser v0.82) ──────────────────
+checking_process_of_malware_analysis_tool_ollyice_exe:
+  mitre: "T1518.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    OllyICE is a modified OllyDbg build with extra anti-anti-debug patches;
+    its presence indicates active dynamic analysis of the sample.
+
+checking_process_of_malware_analysis_tool_autoruns_exe:
+  mitre: "T1518.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    Autoruns (Sysinternals) enumerates all auto-start locations; its presence
+    indicates an analyst inspecting persistence mechanisms alongside execution.
+
+checking_process_of_malware_analysis_tool_autorunsc_exe:
+  mitre: "T1518.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    Autorunsc is the CLI version of Autoruns; its presence indicates scripted or
+    automated persistence enumeration during sandbox analysis.
+
+checking_process_of_malware_analysis_tool_filemon_exe:
+  mitre: "T1518.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    Filemon (legacy Sysinternals file monitor, predecessor to Process Monitor)
+    captures file system operations; its presence indicates behavioral monitoring.
+
+checking_process_of_malware_analysis_tool_regmon_exe:
+  mitre: "T1518.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    Regmon (legacy Sysinternals registry monitor, predecessor to Process Monitor)
+    captures registry operations; its presence indicates active behavioral analysis.
+
+checking_process_of_malware_analysis_tool_idaq64_exe:
+  mitre: "T1518.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    idaq64.exe is the 64-bit IDA Pro interactive disassembler; its presence
+    indicates 64-bit static or dynamic reverse engineering of the sample.
+
+checking_process_of_malware_analysis_tool_dumpcap_exe:
+  mitre: "T1518.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    Dumpcap is the Wireshark packet capture engine; its presence indicates
+    network traffic capture even when the Wireshark GUI is not visible.
+
+checking_process_of_malware_analysis_tool_hookexplorer_exe:
+  mitre: "T1518.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    HookExplorer enumerates API hooks in running processes; its presence indicates
+    an analyst examining the sample's hooking or injection activity.
+
+checking_process_of_malware_analysis_tool_importrec_exe:
+  mitre: "T1518.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    ImportREC reconstructs PE import tables from dumped processes; its presence
+    indicates an analyst recovering imports after unpacking the sample.
+
+checking_process_of_malware_analysis_tool_petools_exe:
+  mitre: "T1518.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    PE Tools is a PE editor and process dumper; its presence indicates static
+    PE structure analysis or live process memory dumping.
+
+checking_process_of_malware_analysis_tool_sysinspector_exe:
+  mitre: "T1518.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    ESET SysInspector collects a comprehensive system snapshot (processes, files,
+    registry, network); its presence indicates automated system-state collection.
+
+checking_process_of_malware_analysis_tool_proc_analyzer_exe:
+  mitre: "T1518.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    proc_analyzer is a process analysis utility used in automated sandbox pipelines
+    to collect behavioral data on running processes.
+
+checking_process_of_malware_analysis_tool_sysanalyzer_exe:
+  mitre: "T1518.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    sysAnalyzer monitors processes, files, and registry changes during malware
+    execution; its presence confirms an automated behavioral analysis environment.
+
+checking_process_of_malware_analysis_tool_sniff_hit_exe:
+  mitre: "T1518.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    sniff_hit is a lightweight network sniffing utility used in sandbox environments
+    to capture malware network traffic without a full packet capture stack.
+
+checking_process_of_malware_analysis_tool_httpdebugger_exe:
+  mitre: "T1518.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    HTTP Debugger is an HTTP traffic inspector; its presence indicates web traffic
+    interception and analysis alongside malware execution.
+
+checking_process_of_malware_analysis_tool_cheatengine_i386_exe:
+  mitre: "T1518.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    Cheat Engine (32-bit) is a memory scanner and modifier; its presence indicates
+    live memory inspection and patching of the running sample.
+
+checking_process_of_malware_analysis_tool_cheatengine_x86_64_exe:
+  mitre: "T1518.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    Cheat Engine (64-bit) is a memory scanner and modifier; its presence indicates
+    64-bit process memory analysis.
+
+checking_process_of_malware_analysis_tool_cheatengine_x86_64_sse4_avx2_exe:
+  mitre: "T1518.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    Cheat Engine (64-bit SSE4/AVX2 optimised build); same memory analysis capability
+    as the standard 64-bit variant, targeting modern CPUs.
+
+checking_process_of_malware_analysis_tool_r2_exe:
+  mitre: "T1518.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    r2.exe is the Radare2 CLI binary; catches both the direct and aliased execution
+    paths of the open-source reverse engineering framework.
+
+checking_process_of_malware_analysis_tool_cutter_exe:
+  mitre: "T1518.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    Cutter is the Qt GUI frontend for Radare2; its presence indicates graphical
+    disassembly and reverse engineering analysis of the sample.
+
+checking_process_of_malware_analysis_tool_dnspyex_exe:
+  mitre: "T1518.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    dnSpyEx is a maintained fork of dnSpy for .NET decompilation and live debugging;
+    its presence indicates analysis of .NET malware components.
+
+checking_process_of_malware_analysis_tool_ilspy_exe:
+  mitre: "T1518.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    ILSpy is an open-source .NET assembly decompiler; its presence indicates
+    static analysis of .NET IL code within the malware sample.
+
+checking_process_of_malware_analysis_tool_hxd_exe:
+  mitre: "T1518.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    HxD is a freeware hex editor used for binary file analysis; its presence
+    indicates byte-level inspection of the sample or its dropped artifacts.
+
+
+# ═══════════════════════════════════════════════════════════════════
+# ADDITIONAL ANTI-DEBUG  (al-khaser WudfIs* variants + write-watch
+#                         variants + pafish hooks/Cuckoo checks)
+# ═══════════════════════════════════════════════════════════════════
+
+# ── WudfIs* variants ──────────────────────────────────────────────
+checking_wudfiskerneldebuggerpresent_api:
+  mitre: "T1622"
+  checkpoint: "https://evasions.checkpoint.com/src/Anti-Debug/techniques/debug-flags.html"
+  description: >
+    WudfIsKernelDebuggerPresent() targets the WDF kernel-mode layer; it specifically
+    detects active WinDbg kernel debugging sessions independently of user-mode checks.
+
+checking_wudfisuserdebuggerpresent_api:
+  mitre: "T1622"
+  checkpoint: "https://evasions.checkpoint.com/src/Anti-Debug/techniques/debug-flags.html"
+  description: >
+    WudfIsUserDebuggerPresent() checks for an attached user-mode debugger via the WDF
+    abstraction layer, complementing the standard IsDebuggerPresent API check.
+
+# ── VirtualAlloc write-watch variants ─────────────────────────────
+checking_virtualalloc_write_watch_api_calls:
+  mitre: "T1622"
+  checkpoint: "https://evasions.checkpoint.com/src/Anti-Debug/techniques/misc.html"
+  description: >
+    MEM_WRITE_WATCH page observed across multiple API calls; a GetWriteWatch count
+    exceeding the expected number of self-writes reveals debugger-injected memory writes.
+
+checking_virtualalloc_write_watch_isdebuggerpresent:
+  mitre: "T1622"
+  checkpoint: "https://evasions.checkpoint.com/src/Anti-Debug/techniques/misc.html"
+  description: >
+    MEM_WRITE_WATCH page sampled across an IsDebuggerPresent call; extra writes
+    recorded by GetWriteWatch indicate the debugger patched memory during the API call.
+
+checking_virtualalloc_write_watch_code_write:
+  mitre: "T1622"
+  checkpoint: "https://evasions.checkpoint.com/src/Anti-Debug/techniques/misc.html"
+  description: >
+    MEM_WRITE_WATCH page used with self-modifying code; an unexpected extra write count
+    from GetWriteWatch reveals a debugger patching the executable code region.
+
+# ── Pafish hooks / Cuckoo detection ───────────────────────────────
+checking_function_shellexecuteexw_method_1:
+  mitre: "T1622"
+  checkpoint: "https://evasions.checkpoint.com/src/Anti-Debug/techniques/process-memory.html"
+  description: >
+    Inspects the prologue bytes of ShellExecuteExW for inline JMP/CALL trampolines;
+    sandboxes hook process-launch APIs to intercept and log child process creation.
+
+checking_function_createprocessa_method_1:
+  mitre: "T1622"
+  checkpoint: "https://evasions.checkpoint.com/src/Anti-Debug/techniques/process-memory.html"
+  description: >
+    Inspects the prologue bytes of CreateProcessA for inline hook trampolines;
+    a detour outside module bounds confirms sandbox or debugger API hooking.
+
+looking_in_the_tls_for_the_hooks_information_structure:
+  mitre: "T1622"
+  checkpoint: "https://evasions.checkpoint.com/src/Anti-Debug/techniques/misc.html"
+  description: >
+    Checks Thread Local Storage for the Cuckoo sandbox hooks information structure;
+    Cuckoo injects hook metadata into TLS slots of all monitored guest processes.
+
+
+# ═══════════════════════════════════════════════════════════════════
+# ADDITIONAL VM CHECKS — pafish checks not in original mapping
+# ═══════════════════════════════════════════════════════════════════
+
+# ── Pafish VirtualBox-specific ────────────────────────────────────
+scsi_port_bus_target_id_logical_unit_id_0_identifier:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    SCSI port→bus→target→LUN 0 identifier string in the registry contains "VBOX"
+    for VirtualBox virtual disk controllers; absent on physical SCSI hardware.
+
+reg_key_hklm_software_oracle_virtualbox_guest_additions:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    HKLM\SOFTWARE\Oracle\VirtualBox Guest Additions is created by the Guest Additions
+    installer; it is a definitive VirtualBox guest indicator.
+
+reg_key_hklm_system_controlset001_services_vbox:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    HKLM\SYSTEM\ControlSet001\Services\VBox* service keys are installed by VirtualBox
+    Guest Additions kernel drivers; their presence identifies a VirtualBox guest.
+
+driver_files_in_c_windows_system32_drivers_vbox:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    VBox* driver files in C:\WINDOWS\system32\drivers\ (VBoxGuest.sys, VBoxMouse.sys,
+    etc.) are installed by VirtualBox Guest Additions and directly identify a VirtualBox VM.
+
+additional_system_files:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    Checks for additional VirtualBox-specific system files beyond the main driver set;
+    any match confirms a VirtualBox guest installation.
+
+looking_for_pseudo_devices:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    Attempts to open VM pseudo-device paths (\\.\VBoxGuest, \\.\vmci, \\.\HGFS);
+    a successful CreateFile call reveals VM-specific device drivers are present.
+
+looking_for_vboxtray_windows:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    FindWindow searching for VBoxTray hidden window handles; vboxtray.exe registers
+    VBoxTrayToolWndClass window objects only inside VirtualBox guests.
+
+looking_for_vbox_network_share:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/network.html"
+  description: >
+    WNetGetProviderName(WNNC_NET_RDR2SAMPLE) returning "VirtualBox Shared Folders"
+    confirms a VirtualBox guest with the shared-folder feature enabled.
+
+looking_for_vbox_processes_vboxservice_exe_vboxtray_exe:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    CreateToolhelp32Snapshot enumeration for vboxservice.exe and vboxtray.exe;
+    both run exclusively inside VirtualBox guests with Guest Additions installed.
+
+# ── Pafish VMware-specific ────────────────────────────────────────
+scsi_port_0_1_2_bus_target_id_logical_unit_id_0_identifier:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    SCSI ports 0–2 identifier strings containing "VMware" identify VMware virtual
+    storage controllers via the PnP registry.
+
+reg_key_hklm_software_vmware_inc_vmware_tools:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    HKLM\SOFTWARE\VMware, Inc.\VMware Tools key is created by the VMware Tools installer;
+    its presence directly identifies a VMware guest environment.
+
+looking_for_c_windows_system32_drivers_vmmouse_sys:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    vmmouse.sys is the VMware virtual mouse driver; its presence in System32\drivers
+    confirms VMware Tools is installed in a VMware guest.
+
+looking_for_c_windows_system32_drivers_vmhgfs_sys:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    vmhgfs.sys is the VMware Host-Guest Filesystem driver; its presence identifies
+    VMware Tools with shared-folder support enabled.
+
+looking_for_a_mac_address_starting_with_00_05_69_00_0c_29_00_1c_14_or_00_50_56:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/network.html"
+  description: >
+    Checks all four VMware OUI prefixes (00:05:69, 00:0C:29, 00:1C:14, 00:50:56)
+    in a single call, identifying any VMware virtual NIC variant.
+
+looking_for_network_adapter_name:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/network.html"
+  description: >
+    GetAdaptersInfo adapter description containing "VMware" identifies a VMware virtual
+    NIC by name rather than MAC OUI alone.
+
+looking_for_vmware_serial_number:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    DMI/SMBIOS serial number string containing VMware-specific values identifies a
+    VMware guest via firmware data exposed through registry or WMI.
+
+# ── Pafish QEMU / Bochs ───────────────────────────────────────────
+cpuid_cpu_brand_string_qemu_virtual_cpu:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/cpu.html"
+  description: >
+    CPUID brand string returning "QEMU Virtual CPU" directly identifies a QEMU-based
+    virtual machine via the processor identification leaf.
+
+cpuid_amd_wrong_value_for_processor_name:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/cpu.html"
+  description: >
+    Bochs emulates AMD CPUID with incorrect or generic processor name values that
+    differ from any known real AMD CPU model string.
+
+cpuid_intel_wrong_value_for_processor_name:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/cpu.html"
+  description: >
+    Bochs emulates Intel CPUID with incorrect or generic processor name values;
+    comparing against known Intel model strings detects Bochs x86 emulation.
+
+# ── Pafish generic sandbox ────────────────────────────────────────
+checking_username:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    GetUserName compared against known sandbox account names (e.g., "CurrentUser",
+    "sandbox", "malware"); a match reveals a pre-configured sandbox user session.
+
+checking_file_path:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    The executable's own file path checked against known sandbox submission paths
+    (e.g., C:\sample.exe); a match reveals a sandbox staging context.
+
+checking_common_sample_names_in_drives_root:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Scans drive root directories for common sandbox sample filenames (sample.exe,
+    malware.exe, etc.); their presence indicates a sandbox submission directory.
+
+checking_if_numberofprocessors_is_2_via_peb_access:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    PEB.NumberOfProcessors read directly from memory; value < 2 indicates a single-core
+    sandbox VM conserving host CPU resources.
+
+checking_if_numberofprocessors_is_2_via_getsysteminfo:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    GetSystemInfo dwNumberOfProcessors < 2; the API-based equivalent of the PEB
+    processor-count check, detecting single-core sandbox VMs.
+
+checking_if_pysical_memory_is_1gb:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    GlobalMemoryStatusEx ullTotalPhys < 1 GB identifies heavily under-provisioned
+    sandbox VMs; production machines always have at least 2–4 GB of RAM.
+
+checking_operating_system_uptime_using_gettickcount:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    GetTickCount returning a very low value reveals a freshly booted sandbox VM
+    restored from snapshot; real user machines accumulate longer uptimes.
+
+checking_if_operating_system_isnativevhdboot:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    IsNativeVhdBoot() returns TRUE when Windows boots from a VHD file; characteristic
+    of Hyper-V sandbox environments that boot guests from differencing VHDs.
+
+# ── Pafish Sandboxie / Wine ───────────────────────────────────────
+using_getmodulehandle_sbiedll_dll:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    GetModuleHandle("sbiedll.dll") succeeding reveals Sandboxie is active; sbiedll.dll
+    is injected into every sandboxed process by the Sandboxie kernel driver.
+
+using_getprocaddress_wine_get_unix_file_name_from_kernel32_dll:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    GetProcAddress("wine_get_unix_file_name") exported from kernel32.dll only under Wine;
+    its presence directly identifies a Wine Windows-compatibility environment.
+
+reg_key_hkcu_software_wine:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    HKCU\SOFTWARE\Wine registry key is created by the Wine runtime; its presence
+    identifies a Wine-based Windows emulation environment.
+
+
+# ═══════════════════════════════════════════════════════════════════
+# GEN_SANDBOX VM CHECKS — al-khaser process/module/username checks
+# ═══════════════════════════════════════════════════════════════════
+
+# ── Loaded module / injected DLL checks ──────────────────────────
+checking_if_process_loaded_modules_contains_avghookx_dll:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    avghookx.dll is an AVG antivirus hook DLL injected into monitored processes;
+    its presence in the loaded-module list signals an AVG-instrumented sandbox.
+
+checking_if_process_loaded_modules_contains_avghooka_dll:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    avghooka.dll is an AVG hook DLL variant; its presence identifies an
+    AVG-instrumented analysis environment.
+
+checking_if_process_loaded_modules_contains_snxhk_dll:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    snxhk.dll is the Avast sandbox hook DLL injected into monitored processes;
+    its presence reveals an Avast-monitored analysis environment.
+
+checking_if_process_loaded_modules_contains_sbiedll_dll:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    sbiedll.dll is the Sandboxie user-mode component injected into sandboxed processes;
+    its presence in the loaded-module list identifies a Sandboxie environment.
+
+checking_if_process_loaded_modules_contains_dbghelp_dll:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    dbghelp.dll loaded into the process indicates a debugger or analysis tool is
+    instrumenting execution; normal applications do not load debug helper libraries.
+
+checking_if_process_loaded_modules_contains_api_log_dll:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    api_log.dll is an API monitor DLL injected by sandbox and analysis platforms
+    to intercept and log Windows API calls at runtime.
+
+checking_if_process_loaded_modules_contains_dir_watch_dll:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    dir_watch.dll is a file system monitoring DLL injected by sandbox environments
+    to track file creation and modification during sample execution.
+
+checking_if_process_loaded_modules_contains_pstorec_dll:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    pstorec.dll is the Protected Storage COM server; unexpected presence indicates
+    a sandbox hooking credential-access APIs for behavioral logging.
+
+checking_if_process_loaded_modules_contains_vmcheck_dll:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    vmcheck.dll is a VMware-related DLL loaded in guest VMs; its presence in
+    loaded modules confirms a VMware execution environment.
+
+checking_if_process_loaded_modules_contains_wpespy_dll:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    wpespy.dll is a WPE Pro packet sniffer DLL; its presence indicates
+    network traffic interception by an analysis tool.
+
+checking_if_process_loaded_modules_contains_cmdvrt64_dll:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    cmdvrt64.dll is the 64-bit Comodo Virtual Container DLL injected into sandboxed
+    processes; its presence identifies a Comodo sandbox environment.
+
+checking_if_process_loaded_modules_contains_cmdvrt32_dll:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    cmdvrt32.dll is the 32-bit Comodo Virtual Container DLL; its presence
+    identifies a Comodo-sandboxed execution environment.
+
+# ── Process file name / hash checks ──────────────────────────────
+checking_if_process_file_name_contains_sample_exe:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Executable filename "sample.exe" indicates the binary was submitted to a sandbox
+    without renaming — a common automated analysis pipeline artifact.
+
+checking_if_process_file_name_contains_bot_exe:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Filename "bot.exe" is a known sandbox submission name used by automated
+    malware analysis pipelines.
+
+checking_if_process_file_name_contains_sandbox_exe:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Filename "sandbox.exe" directly reveals a sandbox that did not rename the
+    submitted sample before execution.
+
+checking_if_process_file_name_contains_malware_exe:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Filename "malware.exe" is a known sandbox staging name; no real-world malware
+    is delivered under this label.
+
+checking_if_process_file_name_contains_test_exe:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Filename "test.exe" is commonly used by sandbox operators when deploying
+    analysis tools or renaming submitted samples for tracking.
+
+checking_if_process_file_name_contains_klavme_exe:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    "klavme.exe" is a filename historically associated with Kaspersky antivirus
+    sandbox environments as a default submission filename.
+
+checking_if_process_file_name_contains_myapp_exe:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    "myapp.exe" is a generic placeholder filename used by some sandbox platforms;
+    its presence indicates the sample was not renamed before analysis.
+
+checking_if_process_file_name_contains_testapp_exe:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    "testapp.exe" is a generic test-application name used by sandbox and analysis
+    infrastructure as a default sample executable name.
+
+checking_if_process_file_name_looks_like_a_hash_al_khaser_x86:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Executable filename matching a hash-like pattern (e.g., 32-hex-char name) indicates
+    the sandbox renamed the sample to its MD5/SHA1 for pipeline tracking purposes.
+
+# ── Username checks ───────────────────────────────────────────────
+checking_if_username_matches_currentuser:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Username "CurrentUser" is a known sandbox default account used by automated
+    analysis environments to simulate a generic user session.
+
+checking_if_username_matches_sandbox:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Username "Sandbox" directly reveals a sandbox-configured user account; no
+    legitimate deployment uses this as a real account name.
+
+checking_if_username_matches_emily:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Username "Emily" is a known Anubis sandbox default account name used in
+    older automated malware analysis systems.
+
+checking_if_username_matches_hapubws:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Username "HAPUBWS" is a known sandbox environment default account;
+    its presence identifies that specific analysis platform.
+
+checking_if_username_matches_hong_lee:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Username "Hong Lee" is a known sandbox default account name appearing in
+    specific automated analysis environments.
+
+checking_if_username_matches_it_admin:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Username "IT-ADMIN" is a known sandbox default account used by certain
+    enterprise security analysis platforms.
+
+checking_if_username_matches_johnson:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Username "Johnson" is a known sandbox default account name used to simulate
+    a plausible enterprise user environment.
+
+checking_if_username_matches_miller:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Username "Miller" is a known sandbox default account name used to simulate
+    a plausible enterprise user.
+
+checking_if_username_matches_milozs:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Username "milozs" is associated with specific automated analysis sandboxes;
+    its presence indicates a pre-configured sandbox account.
+
+checking_if_username_matches_peter_wilson:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Username "Peter Wilson" is a known sandbox default account name intended
+    to resemble a plausible real user.
+
+checking_if_username_matches_timmy:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Username "timmy" is a known sandbox default account appearing in specific
+    automated malware analysis environments.
+
+checking_if_username_matches_user:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Username "user" is a generic sandbox account name used by many automated
+    analysis platforms as a default session identity.
+
+checking_if_username_matches_sand_box:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Username "sand box" (with space) is a variant of the "sandbox" account name;
+    its presence directly identifies a sandbox-configured environment.
+
+checking_if_username_matches_malware:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Username "malware" is used by some sandbox platforms as the default account
+    under which submitted samples are executed.

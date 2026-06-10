@@ -19,7 +19,7 @@ tools:
 categories:
   - id: vm_checks
     name: VM Detection Checks
-    weight: 0.35
+    weight: 0.30
     mitre: "T1497"
     alkhaser_flags:
       - GEN_SANDBOX
@@ -36,7 +36,7 @@ categories:
 
   - id: anti_debug
     name: Anti-Debug Checks
-    weight: 0.30
+    weight: 0.10
     mitre: "T1622"
     alkhaser_flags:
       - TLS
@@ -45,7 +45,7 @@ categories:
 
   - id: timing_attacks
     name: Timing Attacks
-    weight: 0.20
+    weight: 0.25
     mitre: "T1497.003"
     alkhaser_flags:
       - TIMING_ATTACKS
@@ -54,7 +54,7 @@ categories:
 
   - id: analysis_tools
     name: Analysis Tool Detection
-    weight: 0.15
+    weight: 0.35
     mitre: "T1518.001"
     alkhaser_flags:
       - ANALYSIS_TOOLS

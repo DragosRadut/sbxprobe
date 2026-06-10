@@ -97,6 +97,9 @@ tr:hover td { background: #1e293b66; }
 .tool-badge.corroborated { background: #1e3a5f; color: #38bdf8; }
 .mitre-link { font-size: .75em; color: #38bdf8; opacity: .7; }
 .mitre-link:hover { opacity: 1; }
+.cpr-link { font-size: .72em; color: #a78bfa; opacity: .7;
+            background: #1e1b4b; padding: 1px 5px; border-radius: 3px; }
+.cpr-link:hover { opacity: 1; text-decoration: none; }
 
 /* ── Filters ── */
 .filters { margin-bottom: 8px; display: flex; gap: 6px; flex-wrap: wrap; }
@@ -185,18 +188,23 @@ class HTMLReportGenerator:
             for r in detected_checks:
                 desc     = _CHECK_DESCRIPTIONS.get(r.check_id, "")
                 tool_cls = "tool-badge corroborated" if r.deduplicated else "tool-badge"
-                mitre_entry  = _CHECK_MITRE.get(r.check_id, {})
-                mitre_id     = mitre_entry.get("mitre", "") if isinstance(mitre_entry, dict) else ""
-                mitre_badge  = (
-                    f" &nbsp; <a class='mitre-link' href='{_MITRE_URL}{mitre_id.replace('.','/')}'"
-                    f" target='_blank'>{_e(mitre_id)}</a>"
+                mitre_entry   = _CHECK_MITRE.get(r.check_id, {})
+                mitre_id      = mitre_entry.get("mitre", "")      if isinstance(mitre_entry, dict) else ""
+                checkpoint_url= mitre_entry.get("checkpoint", "") if isinstance(mitre_entry, dict) else ""
+                mitre_badge   = (
+                    " &nbsp; <a class='mitre-link' href='" + _MITRE_URL + mitre_id.replace(".", "/") + "'"
+                    " target='_blank'>" + _e(mitre_id) + "</a>"
                 ) if mitre_id else ""
+                cpr_badge     = (
+                    " &nbsp; <a class='cpr-link' href='" + _e(checkpoint_url) + "'"
+                    " target='_blank' title='Checkpoint Evasions Encyclopedia'>CPR</a>"
+                ) if checkpoint_url else ""
                 items += (
                     f"<div class='artifact'>"
                     f"<div class='artifact-label'>{_e(r.label)}</div>"
                     + (f"<div class='artifact-desc'>{_e(desc)}</div>" if desc else "")
                     + f"<div class='artifact-tool'><span class='{tool_cls}'>{_e(r.tool)}</span>"
-                    f"{mitre_badge} &nbsp; {_e(r.category_name)}</div>"
+                    f"{mitre_badge}{cpr_badge} &nbsp; {_e(r.category_name)}</div>"
                     f"</div>"
                 )
             detected_html = f"""

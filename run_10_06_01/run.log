@@ -1,0 +1,71 @@
+[sbxprobe] Env       : win10_vbox_default
+[sbxprobe] Run ID    : 20260611T010058Z
+[sbxprobe] Mode      : single-scenario (1 scenario)
+[sbxprobe] Output    : C:\Users\admin\Desktop\sbx2\sbxprobe-main\reports\win10_vbox_default\20260611T010058Z
+[sbxprobe] Log       : C:\Users\admin\Desktop\sbx2\sbxprobe-main\reports\win10_vbox_default\20260611T010058Z\run.log
+
+============================================================
+[sbxprobe] Running : Baseline Transparency Evaluation
+[sbxprobe] Output  : C:\Users\admin\Desktop\sbx2\sbxprobe-main\reports\win10_vbox_default\20260611T010058Z
+============================================================
+
+[runner] al-khaser  → VM Detection Checks
+[runner] Flags      : GEN_SANDBOX VBOX VMWARE VPC QEMU KVM XEN WINE PARALLELS HYPERV
+[runner] Sleep      : 2s  Timeout : 300s
+[runner] Launching ...
+[runner] Exit code  : 0  Runtime : 30.05s
+[runner] Raw log    : C:\Users\admin\Desktop\sbx2\sbxprobe-main\logs\win10_vbox_default\20260611T010058Z\alkhaser_vm_checks_raw.txt
+[runner] Version    : v0.82
+[runner] Parsed     : 35 checks
+
+[runner] al-khaser  → Anti-Debug Checks
+[runner] Flags      : TLS DEBUG
+[runner] Sleep      : 2s  Timeout : 300s
+[runner] Launching ...
+[runner] Exit code  : 0  Runtime : 0.85s
+[runner] Raw log    : C:\Users\admin\Desktop\sbx2\sbxprobe-main\logs\win10_vbox_default\20260611T010058Z\alkhaser_anti_debug_raw.txt
+[runner] Version    : v0.82
+[runner] Parsed     : 41 checks
+
+[runner] al-khaser  → Timing Attacks
+[runner] Flags      : TIMING_ATTACKS
+[runner] Sleep      : 2s  Timeout : 300s
+[runner] Launching ...
+[runner] Exit code  : 0  Runtime : 32.44s
+[runner] Raw log    : C:\Users\admin\Desktop\sbx2\sbxprobe-main\logs\win10_vbox_default\20260611T010058Z\alkhaser_timing_attacks_raw.txt
+[runner] Version    : v0.82
+[runner] Parsed     : 11 checks
+
+[runner] al-khaser  → Analysis Tool Detection
+[runner] Flags      : ANALYSIS_TOOLS ANTI_DISASSM
+[runner] Sleep      : 2s  Timeout : 300s
+[runner] Launching ...
+[runner] Exit code  : 0  Runtime : 0.95s
+[runner] Raw log    : C:\Users\admin\Desktop\sbx2\sbxprobe-main\logs\win10_vbox_default\20260611T010058Z\alkhaser_analysis_tools_raw.txt
+[runner] Version    : v0.82
+[runner] Parsed     : 48 checks
+
+[runner] pafish     → multi-category
+[runner] Timeout    : 60s
+[runner] Launching ...
+[runner] Exit code  : 0  Runtime : 32.44s
+[runner] Raw log    : C:\Users\admin\Desktop\sbx2\sbxprobe-main\logs\win10_vbox_default\20260611T010058Z\pafish_raw.txt
+[runner] Version    : vunknown
+[runner] Parsed     : 5 checks → anti_debug
+[runner] Parsed     : 3 checks → timing_attacks
+[runner] Parsed     : 46 checks → vm_checks
+
+[parser] Total checks : 184  (5 duplicate(s) merged — same check covered by both tools)
+
+[scoring] Score: 0.9038  Risk: LOW  Detection rate: 8.7%
+  VM Detection Checks            0.8442  (77 checks, 12 detected  [3 corroborated])
+  Anti-Debug Checks              0.9565  (46 checks, 2 detected)
+  Timing Attacks                 0.8571  (14 checks, 2 detected)
+  Analysis Tool Detection        1.0000  (47 checks, 0 detected  [1 corroborated])
+
+[report] JSON     → C:\Users\admin\Desktop\sbx2\sbxprobe-main\reports\win10_vbox_default\20260611T010058Z\report.json
+[report] CSV      → C:\Users\admin\Desktop\sbx2\sbxprobe-main\reports\win10_vbox_default\20260611T010058Z\checks.csv
+[report] Markdown → C:\Users\admin\Desktop\sbx2\sbxprobe-main\reports\win10_vbox_default\20260611T010058Z\report.md
+[report] HTML     → C:\Users\admin\Desktop\sbx2\sbxprobe-main\reports\win10_vbox_default\20260611T010058Z\report.html
+
+[sbxprobe] Done.

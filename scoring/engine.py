@@ -52,13 +52,13 @@ def deduplicate_checks(checks: List[CheckResult]) -> List[CheckResult]:
     Within each (category_id, check_id) group, merge results from multiple tools.
 
     Merging policy (conservative):
+      - Only merges entries from DIFFERENT tools (same-tool duplicates, e.g. the
+        same check appearing in two al-khaser flag groups, are silently collapsed
+        without setting deduplicated=True — they are not cross-tool corroboration).
       - If any tool reports "detected", the merged result is "detected".
       - If all tools agree on "not_detected", the result is "not_detected".
       - The tool field becomes "al-khaser+pafish" (sorted, deduplicated).
-      - deduplicated=True marks the merged entry.
-
-    This prevents double-counting the same logical check when both al-khaser
-    and pafish cover it, while ensuring a detection by either tool is surfaced.
+      - deduplicated=True marks entries confirmed by at least two distinct tools.
     """
     seen: Dict[tuple, CheckResult] = {}
 
@@ -69,12 +69,23 @@ def deduplicate_checks(checks: List[CheckResult]) -> List[CheckResult]:
             seen[key] = dataclasses.replace(check)
             continue
 
-        existing = seen[key]
-        tools = sorted(set(existing.tool.split("+") + check.tool.split("+")))
-        merged_tool = "+".join(tools)
+        existing      = seen[key]
+        existing_tools = set(existing.tool.split("+"))
+        new_tools      = set(check.tool.split("+"))
+        added_tools    = new_tools - existing_tools
+
+        if not added_tools:
+            # Same tool(s) appearing again (e.g. two al-khaser flag groups both
+            # check the same thing). Collapse silently — not a corroboration.
+            if check.normalized == DETECTED and existing.normalized != DETECTED:
+                seen[key] = dataclasses.replace(existing, normalized=DETECTED,
+                                                raw_value=f"{existing.raw_value}/{check.raw_value}")
+            continue
+
+        # Different tools — genuine cross-tool corroboration.
+        merged_tool = "+".join(sorted(existing_tools | new_tools))
 
         if check.normalized == DETECTED and existing.normalized != DETECTED:
-            # Upgrade to detected — one tool found it
             seen[key] = dataclasses.replace(
                 existing,
                 raw_value    = f"{existing.raw_value}/{check.raw_value}",
@@ -83,7 +94,6 @@ def deduplicate_checks(checks: List[CheckResult]) -> List[CheckResult]:
                 deduplicated = True,
             )
         else:
-            # Same outcome from both — just record the multi-tool provenance
             seen[key] = dataclasses.replace(
                 existing,
                 tool         = merged_tool,

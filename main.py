@@ -164,8 +164,10 @@ def _run_pafish_once(
 
     version  = extract_pafish_version(exec_result.stdout)
     expected = pafish_cfg.get("version", "unknown")
+    if version == "unknown":
+        version = expected   # pafish v0.6.1 does not self-report version; use tools.yaml
     print(f"[runner] Version    : v{version}", end="")
-    if version != expected and version != "unknown":
+    if version != expected and expected != "unknown":
         print(f"  WARNING: expected v{expected} (check configs/tools.yaml)", end="")
     print()
 
