@@ -6,6 +6,8 @@ from typing import List
 from scoring.engine import ScoreReport
 from reporting.html_generator import RISK_COLORS, _score_color, _e
 
+_MITRE_URL = "https://attack.mitre.org/techniques/"
+
 
 @dataclass
 class ScenarioResult:
@@ -49,6 +51,10 @@ th { text-align: left; padding: 6px 10px; background: #1e293b; color: #64748b;
 td { padding: 6px 10px; border-top: 1px solid #1e293b44; }
 tr:hover td { background: #1e293b66; }
 .good { color: #4ade80; } .bad { color: #ef4444; }
+a { color: #38bdf8; text-decoration: none; }
+a:hover { text-decoration: underline; }
+.mitre-link { font-size: .75em; color: #38bdf8; opacity: .7; }
+.mitre-link:hover { opacity: 1; }
 """
 
 
@@ -85,6 +91,20 @@ class CombinedHTMLReportGenerator:
   </div>
 </div>"""
 
+            # Build MITRE coverage cell: distinct technique IDs from all categories
+            mitre_ids = []
+            seen = set()
+            for cat in s.get("categories", []):
+                mid = cat.get("mitre", "")
+                if mid and mid not in seen:
+                    seen.add(mid)
+                    mitre_ids.append(mid)
+            mitre_cell = " ".join(
+                "<a class='mitre-link' href='" + _MITRE_URL + mid.replace(".", "/") + "'"
+                " target='_blank'>" + _e(mid) + "</a>"
+                for mid in mitre_ids
+            ) or "—"
+
             score_str_td = f"<a href='{rel_link}'>{score_str}</a>"
             table_rows += (
                 f"<tr>"
@@ -95,6 +115,7 @@ class CombinedHTMLReportGenerator:
                 f"<td>{r.score.detected_count}</td>"
                 f"<td>{r.score.total_checks}</td>"
                 f"<td>{_e(r.run_status)}</td>"
+                f"<td>{mitre_cell}</td>"
                 f"</tr>"
             )
 
@@ -128,7 +149,7 @@ class CombinedHTMLReportGenerator:
   <thead>
     <tr>
       <th>Scenario</th><th>Score</th><th>Risk</th>
-      <th>Detection</th><th>Detected</th><th>Total</th><th>Status</th>
+      <th>Detection</th><th>Detected</th><th>Total</th><th>Status</th><th>MITRE ATT&CK</th>
     </tr>
   </thead>
   <tbody>{table_rows}</tbody>

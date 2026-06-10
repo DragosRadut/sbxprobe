@@ -31,36 +31,39 @@ def run_subprocess(
     try:
         # stdin=DEVNULL prevents al-khaser's end-of-run "system("pause")" call
         # from blocking indefinitely when stdout is a pipe rather than a console.
+        # text=False + explicit decode: al-khaser/pafish run on Windows and may
+        # output via the OEM/ANSI codepage.  Decoding as UTF-8 with errors='replace'
+        # prevents silent truncation when a non-ASCII character (e.g. in a BIOS
+        # vendor string or WMI value) appears mid-output.
         proc = subprocess.Popen(
             [tool_path] + args,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             stdin=subprocess.DEVNULL,
-            text=True,
         )
         try:
-            stdout, stderr = proc.communicate(timeout=timeout)
+            stdout_b, stderr_b = proc.communicate(timeout=timeout)
             elapsed = time.perf_counter() - t_start
             return ExecutionResult(
                 check_id=check_id,
                 tool=tool_path,
                 return_code=proc.returncode,
-                stdout=stdout,
-                stderr=stderr,
+                stdout=stdout_b.decode("utf-8", errors="replace"),
+                stderr=stderr_b.decode("utf-8", errors="replace"),
                 runtime_seconds=round(elapsed, 4),
                 timestamp=timestamp,
                 environment_label=environment_label,
             )
         except subprocess.TimeoutExpired:
             proc.kill()
-            stdout, stderr = proc.communicate()
+            stdout_b, stderr_b = proc.communicate()
             elapsed = time.perf_counter() - t_start
             return ExecutionResult(
                 check_id=check_id,
                 tool=tool_path,
                 return_code=-1,
-                stdout=stdout or "",
-                stderr=stderr or "",
+                stdout=stdout_b.decode("utf-8", errors="replace") if stdout_b else "",
+                stderr=stderr_b.decode("utf-8", errors="replace") if stderr_b else "",
                 runtime_seconds=round(elapsed, 4),
                 timestamp=timestamp,
                 environment_label=environment_label,

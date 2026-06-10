@@ -1,0 +1,73 @@
+C:\Users\admin\Desktop\sbxprobe-main>python main.py --scenario baseline --env vbox_default
+[sbxprobe] Resolving scenarios : ['baseline']
+[sbxprobe] Tools config        : C:\Users\admin\Desktop\sbxprobe-main\configs\tools.yaml
+[sbxprobe] Env       : vbox_default
+[sbxprobe] Run ID    : 20260531T100714Z
+[sbxprobe] Mode      : single-scenario (1 scenario)
+[sbxprobe] Output    : C:\Users\admin\Desktop\sbxprobe-main\reports\vbox_default\20260531T100714Z
+
+============================================================
+[sbxprobe] Running : Baseline Transparency Evaluation
+[sbxprobe] Output  : C:\Users\admin\Desktop\sbxprobe-main\reports\vbox_default\20260531T100714Z
+============================================================
+
+[runner] al-khaser  → VM Detection Checks
+[runner] Flags      : GEN_SANDBOX VBOX VMWARE VPC QEMU KVM XEN WINE PARALLELS HYPERV
+[runner] Sleep      : 10s  Timeout : 300s
+[runner] Launching ...
+[runner] Exit code  : 0  Runtime : 7.40s
+[runner] Raw log    : C:\Users\admin\Desktop\sbxprobe-main\logs\vbox_default\20260531T100714Z\alkhaser_vm_checks_raw.txt
+[runner] Version    : v0.82  WARNING: expected v0.81 (check configs/tools.yaml)
+[runner] Parsed     : 35 checks
+
+[runner] al-khaser  → Anti-Debug Checks
+[runner] Flags      : TLS DEBUG
+[runner] Sleep      : 10s  Timeout : 300s
+[runner] Launching ...
+[runner] Exit code  : 0  Runtime : 2.46s
+[runner] Raw log    : C:\Users\admin\Desktop\sbxprobe-main\logs\vbox_default\20260531T100714Z\alkhaser_anti_debug_raw.txt
+[runner] Version    : v0.82  WARNING: expected v0.81 (check configs/tools.yaml)
+[runner] Parsed     : 41 checks
+
+[runner] al-khaser  → Timing Attacks
+[runner] Flags      : TIMING_ATTACKS
+[runner] Sleep      : 10s  Timeout : 300s
+[runner] Launching ...
+[runner] Exit code  : 0  Runtime : 6.66s
+[runner] Raw log    : C:\Users\admin\Desktop\sbxprobe-main\logs\vbox_default\20260531T100714Z\alkhaser_timing_attacks_raw.txt
+[runner] Version    : vunknown
+[runner] Parsed     : 0 checks
+
+[runner] al-khaser  → Analysis Tool Detection
+[runner] Flags      : ANALYSIS_TOOLS ANTI_DISASSM
+[runner] Sleep      : 10s  Timeout : 300s
+[runner] Launching ...
+[runner] Exit code  : 0  Runtime : 2.21s
+[runner] Raw log    : C:\Users\admin\Desktop\sbxprobe-main\logs\vbox_default\20260531T100714Z\alkhaser_analysis_tools_raw.txt
+[runner] Version    : v0.82  WARNING: expected v0.81 (check configs/tools.yaml)
+[runner] Parsed     : 48 checks
+
+[runner] pafish     → multi-category
+[runner] Timeout    : 60s
+[runner] Launching ...
+[runner] Exit code  : 0  Runtime : 26.41s
+[runner] Raw log    : C:\Users\admin\Desktop\sbxprobe-main\logs\vbox_default\20260531T100714Z\pafish_raw.txt
+[runner] Version    : vunknown
+[runner] Parsed     : 2 checks → anti_debug
+[runner] Parsed     : 2 checks → timing_attacks
+[runner] Parsed     : 42 checks → vm_checks
+
+[parser] Total checks : 167  (3 duplicate(s) merged — same check covered by both tools)
+
+[scoring] Score: 0.8394  Risk: MEDIUM  Detection rate: 7.8%
+  VM Detection Checks            0.8667  (75 checks, 10 detected  [1 corroborated])
+  Anti-Debug Checks              0.9535  (43 checks, 2 detected)
+  Timing Attacks                 0.5000  (2 checks, 1 detected)
+  Analysis Tool Detection        1.0000  (47 checks, 0 detected  [1 corroborated])
+
+[report] JSON     → C:\Users\admin\Desktop\sbxprobe-main\reports\vbox_default\20260531T100714Z\report.json
+[report] CSV      → C:\Users\admin\Desktop\sbxprobe-main\reports\vbox_default\20260531T100714Z\checks.csv
+[report] Markdown → C:\Users\admin\Desktop\sbxprobe-main\reports\vbox_default\20260531T100714Z\report.md
+[report] HTML     → C:\Users\admin\Desktop\sbxprobe-main\reports\vbox_default\20260531T100714Z\report.html
+
+[sbxprobe] Done.

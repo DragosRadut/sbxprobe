@@ -1,17 +1,17 @@
 scenario_id: anti_debug_001
 scenario_name: Anti-Debug Checks
 description: >
-  Focused evaluation of debugger-detection surface.  Covers TLS callbacks,
-  PEB flags, NtQuery* APIs, handle tricks, breakpoint probes (hardware,
-  software, memory PAGE_GUARD, page exception), interrupt tricks, kernel
-  debugger checks, write-watch, job object, and API hook detection.
-  Al-khaser uses DEBUG and TLS flags; pafish contributes its debugger section.
+  Focused evaluation of debugger-detection surface. Covers TLS callbacks,
+  PEB flags, NtQuery* APIs, handle tricks, breakpoint probes, interrupt tricks,
+  kernel debugger checks, write-watch, job object, API hook detection, and
+  module enumeration walks.
+  MITRE ATT&CK: T1622 — Debugger Evasion.
 version: "2.0"
 
 tools:
   alkhaser:
     timeout: 120
-    sleep: 5
+    sleep: 2
   pafish:
     timeout: 60
 
@@ -19,39 +19,35 @@ categories:
   - id: anti_debug
     name: Anti-Debug Checks
     weight: 1.0
+    mitre: "T1622"
     alkhaser_flags:
       - DEBUG
       - TLS
     pafish: true
 
-# For this focused scenario all pafish output goes to anti_debug.
-# (Pafish's VM artifact checks are intentionally captured here so that
-#  none of its results are silently discarded in a focused run.)
-pafish_keywords:
-  anti_debug:
-    - debugger
-    - debug
-    - cpu
-    - registry
-    - process
-    - file
-    - disk
-    - memory
-    - screen
-    - mouse
-    - mac
-    - bios
-    - acpi
-    - generic
-    - network
-    - system
-    - rdtsc
-    - wine
-    - virtualbox
-    - vmware
-    - qemu
-    - kvm
-    - hypervisor
+# In a focused anti_debug run, only debugger-related pafish sections are scored.
+# VM artefact sections are excluded so they don't inflate the anti-debug score.
+pafish_sections:
+  "Debuggers detection":              anti_debug
+  "CPU information based detections": exclude
+  "Generic reverse turing tests":     exclude
+  "Generic sandbox detection":        exclude
+  "Hooks detection":                  anti_debug
+  "Sandboxie detection":              exclude
+  "Wine detection":                   exclude
+  "VirtualBox detection":             exclude
+  "VMware detection":                 exclude
+  "Qemu detection":                   exclude
+  "Bochs detection":                  exclude
+  "Cuckoo detection":                 anti_debug
+
+pafish_label_overrides:
+  "Checking mouse movement":                exclude
+  "Checking mouse speed":                   exclude
+  "Checking mouse click activity":          exclude
+  "Checking mouse double click activity":   exclude
+  "Checking dialog confirmation":           exclude
+  "Checking plausible dialog confirmation": exclude
 
 scoring:
   detected_value: 0.0

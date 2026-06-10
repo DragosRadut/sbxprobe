@@ -1,18 +1,18 @@
 scenario_id: baseline_001
 scenario_name: Baseline Transparency Evaluation
 description: >
-  Multi-tool baseline run covering all four transparency categories.
-  Al-khaser runs once per category using its native flag groups — every check
-  output is automatically assigned to the category that triggered it, requiring
-  no keyword matching.  Pafish runs once and is classified by pafish_keywords.
-  Overlapping checks (same technique covered by both tools) are deduplicated
-  before scoring so no condition is counted twice.
+  Multi-tool baseline covering all four transparency categories.
+  Al-khaser runs once per category via its native flag groups — no keyword
+  matching, zero ignored checks.  Pafish runs once and is classified by
+  section header (the [-] lines pafish prints before each check group).
+  Behavioural false-positives (mouse, dialog) are explicitly excluded.
+  Overlapping checks are deduplicated before scoring.
 version: "2.0"
 
 tools:
   alkhaser:
     timeout: 300
-    sleep: 10
+    sleep: 2
   pafish:
     timeout: 60
 
@@ -20,6 +20,7 @@ categories:
   - id: vm_checks
     name: VM Detection Checks
     weight: 0.35
+    mitre: "T1497"
     alkhaser_flags:
       - GEN_SANDBOX
       - VBOX
@@ -36,6 +37,7 @@ categories:
   - id: anti_debug
     name: Anti-Debug Checks
     weight: 0.30
+    mitre: "T1622"
     alkhaser_flags:
       - TLS
       - DEBUG
@@ -44,49 +46,54 @@ categories:
   - id: timing_attacks
     name: Timing Attacks
     weight: 0.20
+    mitre: "T1497.003"
     alkhaser_flags:
       - TIMING_ATTACKS
+    alkhaser_sleep: 2
     pafish: true
 
   - id: analysis_tools
     name: Analysis Tool Detection
     weight: 0.15
+    mitre: "T1518.001"
     alkhaser_flags:
       - ANALYSIS_TOOLS
       - ANTI_DISASSM
     pafish: false
 
-# ── Pafish classification map ─────────────────────────────────────────────────
-# Pafish runs all its checks in one invocation with no --check filtering.
-# This ordered map classifies each pafish result into a scoring category.
-# First match wins, so more specific rules (e.g. rdtsc) come before broad ones.
-pafish_keywords:
-  timing_attacks:
-    - rdtsc
-  anti_debug:
-    - debugger
-    - debug
-  vm_checks:
-    - cpu
-    - registry
-    - process
-    - file
-    - disk
-    - memory
-    - screen
-    - mouse
-    - mac
-    - bios
-    - acpi
-    - generic
-    - network
-    - system
-    - wine
-    - virtualbox
-    - vmware
-    - qemu
-    - kvm
-    - hypervisor
+# ── Pafish classification — section-header based ──────────────────────────────
+# Pafish prints "[-] <Section name>" before each check group.
+# Every check that follows is assigned to the mapped category.
+# "exclude" silently drops the check — used for behavioural false-positives
+# that always trigger in headless environments regardless of VM hardening.
+pafish_sections:
+  "Debuggers detection":             anti_debug
+  "CPU information based detections": vm_checks   # overridden per-label below
+  "Generic reverse turing tests":    exclude      # mouse/dialog — always headless FP
+  "Generic sandbox detection":       vm_checks    # Sleep check overridden below
+  "Hooks detection":                 anti_debug
+  "Sandboxie detection":             vm_checks
+  "Wine detection":                  vm_checks
+  "VirtualBox detection":            vm_checks
+  "VMware detection":                vm_checks
+  "Qemu detection":                  vm_checks
+  "Bochs detection":                 vm_checks
+  "Cuckoo detection":                anti_debug
+
+# Per-label overrides: take precedence over the section default above.
+pafish_label_overrides:
+  # CPU section contains RDTSC (timing) and CPUID (vm_checks) — split them:
+  "Checking the difference between CPU timestamp counters (rdtsc)":              timing_attacks
+  "Checking the difference between CPU timestamp counters (rdtsc) forcing VM exit": timing_attacks
+  # Generic sandbox section — Sleep patch check belongs in timing:
+  "Checking if Sleep() is patched using GetTickCount()":                         timing_attacks
+  # Behavioural false-positives — always traced! in headless runs, not VM artefacts:
+  "Checking mouse movement":                exclude
+  "Checking mouse speed":                   exclude
+  "Checking mouse click activity":          exclude
+  "Checking mouse double click activity":   exclude
+  "Checking dialog confirmation":           exclude
+  "Checking plausible dialog confirmation": exclude
 
 scoring:
   detected_value: 0.0

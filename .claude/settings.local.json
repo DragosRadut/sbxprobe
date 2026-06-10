@@ -2,7 +2,17 @@
   "permissions": {
     "allow": [
       "WebSearch",
-      "WebFetch(domain:www.infosecinstitute.com)"
+      "WebFetch(domain:www.infosecinstitute.com)",
+      "Bash(python3 -c ' *)",
+      "Bash(gh api *)",
+      "WebFetch(domain:api.github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(python tests/test_parser.py)",
+      "Bash(python tests/test_vm_checks_scenario.py)",
+      "WebFetch(domain:evasions.checkpoint.com)",
+      "WebFetch(domain:attack.mitre.org)",
+      "WebFetch(domain:github.com)",
+      "Bash(python main.py --scenario baseline --env test --dry-run)"
     ]
   }
 }

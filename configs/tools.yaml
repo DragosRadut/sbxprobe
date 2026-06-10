@@ -5,9 +5,9 @@
 
 alkhaser:
   executable: "probes\\al-khaser\\al-khaser_x86.exe"
-  version: "0.81"       # expected version — logged and validated against parsed output
+  version: "0.82"       # expected version — logged and validated against parsed output
   default_timeout: 120  # seconds; scenarios should override for focused runs
-  default_sleep: 10     # --sleep passed to al-khaser; controls timing-check delay
+  default_sleep: 2      # --sleep passed to al-khaser; controls timing-check delay
 
 pafish:
   executable: "probes\\pafish\\pafish.exe"

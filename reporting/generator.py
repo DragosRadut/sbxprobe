@@ -4,8 +4,20 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import List
 
+import yaml
+
+from _paths import bundle_root
 from parser.normalizer import CheckResult, DETECTED
 from scoring.engine import ScoreReport
+
+
+def _load_check_mitre() -> dict:
+    path = bundle_root() / "configs" / "check_mitre.yaml"
+    try:
+        with path.open(encoding="utf-8") as f:
+            return yaml.safe_load(f) or {}
+    except FileNotFoundError:
+        return {}
 
 
 class ReportGenerator:
@@ -38,6 +50,30 @@ class ReportGenerator:
         }
 
     def write_json(self, checks: List[CheckResult], score: ScoreReport):
+        check_mitre = _load_check_mitre()
+
+        def _check_entry(r: CheckResult) -> dict:
+            entry = {
+                "check_id": r.check_id,
+                "label": r.label,
+                "category_id": r.category_id,
+                "category_name": r.category_name,
+                "raw_value": r.raw_value,
+                "normalized": r.normalized,
+                "tool": r.tool,
+                "deduplicated": r.deduplicated,
+                "timestamp": r.timestamp,
+                "environment_label": r.environment_label,
+                "runtime_seconds": r.runtime_seconds,
+            }
+            mapping = check_mitre.get(r.check_id)
+            if isinstance(mapping, dict):
+                if mapping.get("mitre"):
+                    entry["mitre"] = mapping["mitre"]
+                if mapping.get("checkpoint"):
+                    entry["checkpoint_url"] = mapping["checkpoint"]
+            return entry
+
         data = {
             "meta": self._meta(),
             "score": {
@@ -62,22 +98,7 @@ class ReportGenerator:
                     for c in score.category_scores
                 ],
             },
-            "checks": [
-                {
-                    "check_id": r.check_id,
-                    "label": r.label,
-                    "category_id": r.category_id,
-                    "category_name": r.category_name,
-                    "raw_value": r.raw_value,
-                    "normalized": r.normalized,
-                    "tool": r.tool,
-                    "deduplicated": r.deduplicated,
-                    "timestamp": r.timestamp,
-                    "environment_label": r.environment_label,
-                    "runtime_seconds": r.runtime_seconds,
-                }
-                for r in checks
-            ],
+            "checks": [_check_entry(r) for r in checks],
         }
         out_file = self.out / "report.json"
         out_file.write_text(json.dumps(data, indent=2), encoding="utf-8")

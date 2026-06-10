@@ -5,19 +5,24 @@ description: >
   Covers debuggers (OllyDbg, x64dbg, WinDbg, IDA, Immunity, Cheat Engine),
   SysInternals tools (Process Explorer, Process Monitor, TCPView, Autoruns),
   network analyzers (Wireshark, Fiddler), instrumentation frameworks (Frida,
-  Ghidra, Radare2, dnSpy), PE tools, sandbox process names, and anti-disassembly
-  tricks.  Al-khaser only — pafish does not cover this category.
+  Ghidra, Radare2, dnSpy), PE tools, sandbox processes (JoeBox), and system
+  information tools (ProcessHacker, SystemInformer, DetectItEasy, HxD).
+  Note: ANTI_DISASSM emits no GOOD/BAD output (only Begin/End announcements);
+  all scored checks come from ANALYSIS_TOOLS.
+  Al-khaser only — pafish does not cover this category.
+  MITRE ATT&CK: T1518.001 — Security Software Discovery.
 version: "2.0"
 
 tools:
   alkhaser:
     timeout: 120
-    sleep: 5
+    sleep: 2
 
 categories:
   - id: analysis_tools
     name: Analysis Tool Detection
     weight: 1.0
+    mitre: "T1518.001"
     alkhaser_flags:
       - ANALYSIS_TOOLS
       - ANTI_DISASSM

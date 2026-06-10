@@ -2,14 +2,14 @@ scenario_id: vm_checks_001
 scenario_name: VM Detection Checks
 description: >
   Focused evaluation of hypervisor and sandbox fingerprinting surface.
-  Al-khaser runs with all VM-relevant flag groups; pafish adds corroborating
-  coverage of the same artifact set.  Overlapping results are deduplicated.
+  Al-khaser runs all VM flag groups; pafish adds corroborating coverage.
+  MITRE ATT&CK: T1497 — Virtualization/Sandbox Evasion.
 version: "2.0"
 
 tools:
   alkhaser:
     timeout: 300
-    sleep: 5
+    sleep: 2
   pafish:
     timeout: 60
 
@@ -17,6 +17,7 @@ categories:
   - id: vm_checks
     name: VM Detection Checks
     weight: 1.0
+    mitre: "T1497"
     alkhaser_flags:
       - GEN_SANDBOX
       - VBOX
@@ -30,31 +31,29 @@ categories:
       - HYPERV
     pafish: true
 
-pafish_keywords:
-  vm_checks:
-    - cpu
-    - registry
-    - process
-    - file
-    - disk
-    - memory
-    - screen
-    - mouse
-    - mac
-    - bios
-    - acpi
-    - generic
-    - network
-    - system
-    - rdtsc
-    - wine
-    - virtualbox
-    - vmware
-    - qemu
-    - kvm
-    - hypervisor
-    - debugger
-    - debug
+# In a focused vm_checks run all pafish output goes to vm_checks.
+# Behavioural checks are excluded; no category splitting is needed.
+pafish_sections:
+  "Debuggers detection":              vm_checks
+  "CPU information based detections": vm_checks
+  "Generic reverse turing tests":     exclude
+  "Generic sandbox detection":        vm_checks
+  "Hooks detection":                  vm_checks
+  "Sandboxie detection":              vm_checks
+  "Wine detection":                   vm_checks
+  "VirtualBox detection":             vm_checks
+  "VMware detection":                 vm_checks
+  "Qemu detection":                   vm_checks
+  "Bochs detection":                  vm_checks
+  "Cuckoo detection":                 vm_checks
+
+pafish_label_overrides:
+  "Checking mouse movement":                exclude
+  "Checking mouse speed":                   exclude
+  "Checking mouse click activity":          exclude
+  "Checking mouse double click activity":   exclude
+  "Checking dialog confirmation":           exclude
+  "Checking plausible dialog confirmation": exclude
 
 scoring:
   detected_value: 0.0

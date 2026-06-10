@@ -1,0 +1,55 @@
+[al-khaser version 0.82]
+-------------------------[Initialisation]-------------------------
+
+[*] You are running: Microsoft Windows 10  (build 19045) 64-bit
+[*] All APIs present and accounted for.
+Process is running under WOW64
+
+
+-------------------------[TLS Callbacks]-------------------------
+[*] TLS process attach callback                                                                    [ GOOD ]
+[*] TLS thread attach callback                                                                     [ GOOD ]
+
+-------------------------[Debugger Detection]-------------------------
+[*] Checking IsDebuggerPresent API                                                                 [ GOOD ]
+[*] Checking PEB.BeingDebugged                                                                     [ GOOD ]
+[*] Checking CheckRemoteDebuggerPresent API                                                        [ GOOD ]
+[*] Checking PEB.NtGlobalFlag                                                                      [ GOOD ]
+[*] Checking ProcessHeap.Flags                                                                     [ GOOD ]
+[*] Checking ProcessHeap.ForceFlags                                                                [ GOOD ]
+[*] Checking Low Fragmentation Heap                                                                [ GOOD ]
+[*] Checking NtQueryInformationProcess with ProcessDebugPort                                       [ GOOD ]
+[*] Checking NtQueryInformationProcess with ProcessDebugFlags                                      [ GOOD ]
+[*] Checking NtQueryInformationProcess with ProcessDebugObject                                     [ GOOD ]
+[*] Checking WudfIsAnyDebuggerPresent API                                                          [ GOOD ]
+[*] Checking WudfIsKernelDebuggerPresent API                                                       [ GOOD ]
+[*] Checking WudfIsUserDebuggerPresent API                                                         [ GOOD ]
+[*] Checking NtSetInformationThread with ThreadHideFromDebugger                                    [ GOOD ]
+[*] Checking CloseHandle with an invalide handle                                                   [ GOOD ]
+[*] Checking NtSystemDebugControl                                                                  [ GOOD ]
+[*] Checking UnhandledExcepFilterTest                                                              [ GOOD ]
+[*] Checking OutputDebugString                                                                     [ GOOD ]
+[*] Checking Hardware Breakpoints                                                                  [ GOOD ]
+[*] Checking Software Breakpoints                                                                  [ GOOD ]
+[*] Checking Interupt 0x2d                                                                         [ GOOD ]
+[*] Checking Interupt 1                                                                            [ GOOD ]
+[*] Checking trap flag                                                                             [ GOOD ]
+[*] Checking Memory Breakpoints PAGE GUARD                                                         [ GOOD ]
+[*] Checking If Parent Process is explorer.exe                                                     [ BAD  ]
+[*] Checking SeDebugPrivilege                                                                      [ GOOD ]
+[*] Checking NtQueryObject with ObjectTypeInformation                                              [ GOOD ]
+[*] Checking NtQueryObject with ObjectAllTypesInformation                                          [ GOOD ]
+[*] Checking NtYieldExecution                                                                      [ BAD  ]
+[*] Checking CloseHandle protected handle trick                                                    [ GOOD ]
+[*] Checking NtQuerySystemInformation with SystemKernelDebuggerInformation                         [ GOOD ]
+[*] Checking SharedUserData->KdDebuggerEnabled                                                     [ GOOD ]
+[*] Checking if process is in a job                                                                [ GOOD ]
+[*] Checking VirtualAlloc write watch (buffer only)                                                [ GOOD ]
+[*] Checking VirtualAlloc write watch (API calls)                                                  [ GOOD ]
+[*] Checking VirtualAlloc write watch (IsDebuggerPresent)                                          [ GOOD ]
+[*] Checking VirtualAlloc write watch (code write)                                                 [ GOOD ]
+[*] Checking for page exception breakpoints                                                        [ GOOD ]
+[*] Checking for API hooks outside module bounds                                                   [ GOOD ]
+
+
+Analysis done, I hope you didn't get red flags :)

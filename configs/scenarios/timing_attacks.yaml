@@ -1,18 +1,18 @@
 scenario_id: timing_attacks_001
 scenario_name: Timing Attacks
 description: >
-  Focused evaluation of timing-based anti-sandbox evasion surface.
-  Covers RDTSC delta (plain and Locky variant), NtDelayExecution / Sleep
-  acceleration, GetTickCount drift, SetTimer, timeSetEvent, WaitForSingleObject,
-  WaitForMultipleObjects, IcmpSendEcho, CreateWaitableTimer,
-  and CreateTimerQueueTimer.
-  Al-khaser uses the TIMING_ATTACKS flag; pafish contributes RDTSC checks.
+  Focused evaluation of timing-based anti-sandbox evasion. Covers RDTSC delta
+  (plain and Locky variant), NtDelayExecution / Sleep acceleration, GetTickCount
+  drift, SetTimer, timeSetEvent, WaitForSingleObject, WaitForMultipleObjects,
+  IcmpSendEcho, CreateWaitableTimer, and CreateTimerQueueTimer.
+  Pafish contributes RDTSC and Sleep-patch checks.
+  MITRE ATT&CK: T1497.003 — Time Based Evasion.
 version: "2.0"
 
 tools:
   alkhaser:
     timeout: 120
-    sleep: 5
+    sleep: 2
   pafish:
     timeout: 60
 
@@ -20,35 +20,50 @@ categories:
   - id: timing_attacks
     name: Timing Attacks
     weight: 1.0
+    mitre: "T1497.003"
     alkhaser_flags:
       - TIMING_ATTACKS
+    alkhaser_sleep: 2
     pafish: true
 
-pafish_keywords:
-  timing_attacks:
-    - rdtsc
-    - cpu
-    - registry
-    - process
-    - file
-    - disk
-    - memory
-    - screen
-    - mouse
-    - mac
-    - bios
-    - acpi
-    - generic
-    - network
-    - system
-    - wine
-    - virtualbox
-    - vmware
-    - qemu
-    - kvm
-    - hypervisor
-    - debugger
-    - debug
+# Only timing-relevant pafish checks are scored in this focused run.
+pafish_sections:
+  "Debuggers detection":              exclude
+  "CPU information based detections": timing_attacks
+  "Generic reverse turing tests":     exclude
+  "Generic sandbox detection":        timing_attacks
+  "Hooks detection":                  exclude
+  "Sandboxie detection":              exclude
+  "Wine detection":                   exclude
+  "VirtualBox detection":             exclude
+  "VMware detection":                 exclude
+  "Qemu detection":                   exclude
+  "Bochs detection":                  exclude
+  "Cuckoo detection":                 exclude
+
+pafish_label_overrides:
+  # Only keep timing-relevant checks from the CPU and Generic sandbox sections
+  "Checking hypervisor bit in cpuid feature bits":                    exclude
+  "Checking cpuid hypervisor vendor for known VM vendors":            exclude
+  "Checking username":                                                exclude
+  "Checking file path":                                               exclude
+  "Checking common sample names in drives root":                      exclude
+  "Checking if disk size <= 60GB via DeviceIoControl()":              exclude
+  "Checking if disk size <= 60GB via GetDiskFreeSpaceExA()":          exclude
+  "Checking if NumberOfProcessors is < 2 via PEB access":             exclude
+  "Checking if NumberOfProcessors is < 2 via GetSystemInfo()":        exclude
+  "Checking if pysical memory is < 1Gb":                              exclude
+  "Checking operating system uptime using GetTickCount()":            exclude
+  "Checking if operating system IsNativeVhdBoot()":                   exclude
+  "Checking function ShellExecuteExW method 1":                       exclude
+  "Checking function CreateProcessA method 1":                        exclude
+  "Checking mouse movement":                                          exclude
+  "Checking mouse speed":                                             exclude
+  "Checking mouse click activity":                                    exclude
+  "Checking mouse double click activity":                             exclude
+  "Checking dialog confirmation":                                     exclude
+  "Checking plausible dialog confirmation":                           exclude
+  "Checking mouse presence":                                          exclude
 
 scoring:
   detected_value: 0.0

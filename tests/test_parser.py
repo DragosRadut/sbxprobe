@@ -46,14 +46,39 @@ Process is running under WOW64
 """
 
 PAFISH_SAMPLE = """
-[-] pafish v0.6.1
-[*] CPU - Checking cpuid hypervisor bit ... OK
-[*] CPU - Checking RDTSC ... OK
-[*] CPU - Checking RDTSC forced vm exit ... OK
-[*] Debugger - IsDebuggerPresent ... OK
-[*] Debugger - NtGlobalFlag ... OK
-[*] Registry - Looking for VirtualBox key ... OK
-[*] Registry - Looking for VMWare key ... traced!
+* Pafish (Paranoid Fish) *
+
+[-] Windows version: 6.2 build 9200
+[-] Running in WoW64: True
+
+[-] Debuggers detection
+[*] Using IsDebuggerPresent() ... OK
+[*] Using BeingDebugged via PEB access ... OK
+
+[-] CPU information based detections
+[*] Checking the difference between CPU timestamp counters (rdtsc) ... OK
+[*] Checking the difference between CPU timestamp counters (rdtsc) forcing VM exit ... traced!
+[*] Checking hypervisor bit in cpuid feature bits ... traced!
+[*] Checking cpuid hypervisor vendor for known VM vendors ... traced!
+
+[-] Generic reverse turing tests
+[*] Checking mouse movement ... traced!
+[*] Checking dialog confirmation ... traced!
+
+[-] Generic sandbox detection
+[*] Checking if disk size <= 60GB via GetDiskFreeSpaceExA() ... traced!
+[*] Checking if Sleep() is patched using GetTickCount() ... OK
+
+[-] VirtualBox detection
+[*] Reg key (HKLM\\HARDWARE\\ACPI\\DSDT\\VBOX__) ... traced!
+[*] Reg key (HKLM\\SOFTWARE\\Oracle\\VirtualBox Guest Additions) ... OK
+[*] Looking for a MAC address starting with 08:00:27 ... traced!
+
+[-] VMware detection
+[*] Reg key (HKLM\\SOFTWARE\\VMware, Inc.\\VMware Tools) ... OK
+
+[-] Cuckoo detection
+[*] Looking in the TLS for the hooks information structure ... OK
 """
 
 
@@ -126,12 +151,20 @@ def test_pafish_ok_maps_to_not_detected():
         {"id": "anti_debug",    "name": "Anti-Debug Checks"},
         {"id": "timing_attacks","name": "Timing Attacks"},
     ]
-    pafish_keywords = {
-        "timing_attacks": ["rdtsc"],
-        "anti_debug":     ["debugger", "debug"],
-        "vm_checks":      ["cpu", "registry", "process"],
+    pafish_sections = {
+        "Debuggers detection":              "anti_debug",
+        "CPU information based detections": "vm_checks",
+        "Generic sandbox detection":        "vm_checks",
+        "VirtualBox detection":             "vm_checks",
+        "VMware detection":                 "vm_checks",
     }
-    parser  = PafishParser(categories=categories, pafish_keywords=pafish_keywords)
+    pafish_label_overrides = {
+        "Checking the difference between CPU timestamp counters (rdtsc)":                "timing_attacks",
+        "Checking the difference between CPU timestamp counters (rdtsc) forcing VM exit":"timing_attacks",
+    }
+    parser  = PafishParser(categories=categories,
+                           pafish_sections=pafish_sections,
+                           pafish_label_overrides=pafish_label_overrides)
     results = parser.parse(_make_pf_result(PAFISH_SAMPLE))
 
     ok = [r for r in results if r.raw_value == "ok"]
@@ -145,12 +178,20 @@ def test_pafish_traced_maps_to_detected():
         {"id": "anti_debug",    "name": "Anti-Debug Checks"},
         {"id": "timing_attacks","name": "Timing Attacks"},
     ]
-    pafish_keywords = {
-        "timing_attacks": ["rdtsc"],
-        "anti_debug":     ["debugger", "debug"],
-        "vm_checks":      ["cpu", "registry", "process"],
+    pafish_sections = {
+        "Debuggers detection":              "anti_debug",
+        "CPU information based detections": "vm_checks",
+        "Generic sandbox detection":        "vm_checks",
+        "VirtualBox detection":             "vm_checks",
+        "VMware detection":                 "vm_checks",
     }
-    parser  = PafishParser(categories=categories, pafish_keywords=pafish_keywords)
+    pafish_label_overrides = {
+        "Checking the difference between CPU timestamp counters (rdtsc)":                "timing_attacks",
+        "Checking the difference between CPU timestamp counters (rdtsc) forcing VM exit":"timing_attacks",
+    }
+    parser  = PafishParser(categories=categories,
+                           pafish_sections=pafish_sections,
+                           pafish_label_overrides=pafish_label_overrides)
     results = parser.parse(_make_pf_result(PAFISH_SAMPLE))
 
     traced = [r for r in results if r.raw_value == "traced!"]
@@ -159,16 +200,21 @@ def test_pafish_traced_maps_to_detected():
 
 
 def test_pafish_rdtsc_goes_to_timing_attacks():
-    """rdtsc keyword must route to timing_attacks, not vm_checks (cpu would also match)."""
+    """RDTSC label override must route to timing_attacks even though section is vm_checks."""
     categories      = [
         {"id": "vm_checks",     "name": "VM Detection Checks"},
         {"id": "timing_attacks","name": "Timing Attacks"},
     ]
-    pafish_keywords = {
-        "timing_attacks": ["rdtsc"],
-        "vm_checks":      ["cpu", "registry"],
+    pafish_sections = {
+        "CPU information based detections": "vm_checks",
     }
-    parser  = PafishParser(categories=categories, pafish_keywords=pafish_keywords)
+    pafish_label_overrides = {
+        "Checking the difference between CPU timestamp counters (rdtsc)":                "timing_attacks",
+        "Checking the difference between CPU timestamp counters (rdtsc) forcing VM exit":"timing_attacks",
+    }
+    parser  = PafishParser(categories=categories,
+                           pafish_sections=pafish_sections,
+                           pafish_label_overrides=pafish_label_overrides)
     results = parser.parse(_make_pf_result(PAFISH_SAMPLE))
 
     rdtsc = [r for r in results if "rdtsc" in r.label.lower()]
@@ -190,7 +236,8 @@ def test_deduplication_merges_same_check():
     pf_categories = [{"id": "anti_debug", "name": "Anti-Debug Checks"}]
     pf_parser     = PafishParser(
         categories=pf_categories,
-        pafish_keywords={"anti_debug": ["debugger"]},
+        pafish_sections={"Debuggers detection": "anti_debug"},
+        pafish_label_overrides={},
     )
     # Pafish label "Debugger - IsDebuggerPresent" → slug "debugger_isdebuggerpr..."
     # Different slug from al-khaser → no dedup expected here; but same slug case:

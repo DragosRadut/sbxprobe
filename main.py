@@ -4,6 +4,34 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Optional
 
+
+class _Tee:
+    """Duplicates writes to an original stream and a log file simultaneously.
+
+    Plugged into sys.stdout / sys.stderr so every print() and every error
+    message appears on the console AND in run.log without any changes to the
+    rest of the code.
+    """
+
+    def __init__(self, stream, logfile):
+        self._stream  = stream
+        self._logfile = logfile
+
+    def write(self, data: str) -> int:
+        n = self._stream.write(data)
+        self._logfile.write(data)
+        return n
+
+    def flush(self):
+        self._stream.flush()
+        self._logfile.flush()
+
+    def fileno(self):
+        return self._stream.fileno()
+
+    def isatty(self) -> bool:
+        return False
+
 from _paths import output_root
 from config_loader import resolve_scenarios, DEFAULT_TOOLS_PATH
 from runner.adapters.alkhaser import AlKhaserAdapter
@@ -107,13 +135,14 @@ def _run_alkhaser_for_category(
 
 
 def _run_pafish_once(
-    pafish_cfg: dict,
-    categories: list,
-    pafish_keywords: dict,
-    env: str,
-    log_dir: Path,
+    pafish_cfg:            dict,
+    categories:            list,
+    pafish_sections:       dict,
+    pafish_label_overrides:dict,
+    env:                   str,
+    log_dir:               Path,
 ) -> tuple:
-    """Run pafish once and classify its checks using pafish_keywords.
+    """Run pafish once and classify checks using section headers + label overrides.
     Returns (version_dict, checks, status)."""
 
     adapter = PafishAdapter(pafish_cfg)
@@ -150,18 +179,18 @@ def _run_pafish_once(
         status = "complete"
 
     parsed = PafishParser(
-        categories      = categories,
-        pafish_keywords = pafish_keywords,
+        categories             = categories,
+        pafish_sections        = pafish_sections,
+        pafish_label_overrides = pafish_label_overrides,
     ).parse(exec_result)
 
-    # Show per-category breakdown
     by_cat: Dict[str, int] = {}
     for r in parsed:
         by_cat[r.category_id] = by_cat.get(r.category_id, 0) + 1
     for cat_id, n in sorted(by_cat.items()):
         print(f"[runner] Parsed     : {n} checks → {cat_id}")
     if not parsed:
-        print("[runner] Parsed     : 0 checks (no pafish_keywords matched)")
+        print("[runner] Parsed     : 0 checks (no section matched a category)")
 
     return {"pafish": version}, parsed, status
 
@@ -191,9 +220,10 @@ def _run_scenario(
     output_dir.mkdir(parents=True, exist_ok=True)
     log_dir.mkdir(parents=True, exist_ok=True)
 
-    alkhaser_cfg    = scenario.get("tools", {}).get("alkhaser", {})
-    pafish_cfg      = scenario.get("tools", {}).get("pafish")
-    pafish_keywords = scenario.get("pafish_keywords", {})
+    alkhaser_cfg           = scenario.get("tools", {}).get("alkhaser", {})
+    pafish_cfg             = scenario.get("tools", {}).get("pafish")
+    pafish_sections        = scenario.get("pafish_sections", {})
+    pafish_label_overrides = scenario.get("pafish_label_overrides", {})
 
     all_checks:   List[CheckResult] = []
     tool_versions: dict             = {}
@@ -203,8 +233,13 @@ def _run_scenario(
     for cat in categories:
         if not cat.get("alkhaser_flags"):
             continue
+        # Per-category sleep override: alkhaser_sleep on the category takes
+        # precedence over the global sleep in tools.alkhaser.
+        cat_cfg = dict(alkhaser_cfg)
+        if "alkhaser_sleep" in cat:
+            cat_cfg["sleep"] = cat["alkhaser_sleep"]
         tv, parsed, status = _run_alkhaser_for_category(
-            cat, alkhaser_cfg, env, log_dir
+            cat, cat_cfg, env, log_dir
         )
         tool_versions.update(tv)
         all_checks.extend(parsed)
@@ -215,9 +250,9 @@ def _run_scenario(
 
     # ── Run pafish once if any category requests it ───────────────────────────
     pafish_cats = [c for c in categories if c.get("pafish", False)]
-    if pafish_cats and pafish_cfg and pafish_keywords:
+    if pafish_cats and pafish_cfg and pafish_sections:
         tv, parsed, status = _run_pafish_once(
-            pafish_cfg, categories, pafish_keywords, env, log_dir
+            pafish_cfg, categories, pafish_sections, pafish_label_overrides, env, log_dir
         )
         tool_versions.update(tv)
         all_checks.extend(parsed)
@@ -321,59 +356,78 @@ def main() -> int:
                 tools  = (["al-khaser"] if flags else []) + (["pafish"] if pafish else [])
                 print(f"[dry-run]   {cat['id']:<20} weight={cat['weight']:.2f}  "
                       f"tools={tools}  flags={flags}")
-            pk = scenario.get("pafish_keywords", {})
-            if pk:
-                print(f"[dry-run] pafish_keywords: "
-                      f"{', '.join(f'{k}({len(v)})' for k, v in pk.items())}")
+            ps = scenario.get("pafish_sections", {})
+            if ps:
+                print(f"[dry-run] pafish_sections: "
+                      f"{sum(1 for v in ps.values() if v != 'exclude')} active, "
+                      f"{sum(1 for v in ps.values() if v == 'exclude')} excluded")
         return 0
 
     run_id      = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     base_output = out_base  / args.env / run_id
     base_log    = log_base  / args.env / run_id
 
-    print(f"[sbxprobe] Env       : {args.env}")
-    print(f"[sbxprobe] Run ID    : {run_id}")
-    print(f"[sbxprobe] Mode      : {'multi-scenario' if is_multi else 'single-scenario'} "
-          f"({len(scenarios)} scenario{'s' if len(scenarios) != 1 else ''})")
-    print(f"[sbxprobe] Output    : {base_output}")
+    # ── Set up run.log before any further output ──────────────────────────────
+    base_output.mkdir(parents=True, exist_ok=True)
+    run_log_path = base_output / "run.log"
+    _logfile     = run_log_path.open("w", encoding="utf-8", buffering=1)
+    _orig_stdout, _orig_stderr = sys.stdout, sys.stderr
+    sys.stdout = _Tee(_orig_stdout, _logfile)
+    sys.stderr = _Tee(_orig_stderr, _logfile)
 
-    scenario_results: List[ScenarioResult] = []
+    exit_code = 1
+    try:
+        print(f"[sbxprobe] Env       : {args.env}")
+        print(f"[sbxprobe] Run ID    : {run_id}")
+        print(f"[sbxprobe] Mode      : {'multi-scenario' if is_multi else 'single-scenario'} "
+              f"({len(scenarios)} scenario{'s' if len(scenarios) != 1 else ''})")
+        print(f"[sbxprobe] Output    : {base_output}")
+        print(f"[sbxprobe] Log       : {run_log_path}")
 
-    for scenario in scenarios:
-        sid   = scenario["scenario_id"]
-        sname = scenario["scenario_name"]
+        scenario_results: List[ScenarioResult] = []
 
-        output_dir = (base_output / sid) if is_multi else base_output
-        log_dir    = (base_log    / sid) if is_multi else base_log
+        for scenario in scenarios:
+            sid   = scenario["scenario_id"]
+            sname = scenario["scenario_name"]
 
-        print(f"\n{'='*60}")
-        print(f"[sbxprobe] Running : {sname}")
-        print(f"[sbxprobe] Output  : {output_dir}")
-        print(f"{'='*60}")
+            output_dir = (base_output / sid) if is_multi else base_output
+            log_dir    = (base_log    / sid) if is_multi else base_log
 
-        result = _run_scenario(
-            scenario        = scenario,
-            category_filter = args.categories,
-            env             = args.env,
-            run_id          = run_id,
-            output_dir      = output_dir,
-            log_dir         = log_dir,
-        )
-        if result is not None:
-            scenario_results.append(result)
+            print(f"\n{'='*60}")
+            print(f"[sbxprobe] Running : {sname}")
+            print(f"[sbxprobe] Output  : {output_dir}")
+            print(f"{'='*60}")
 
-    if is_multi and scenario_results:
-        print(f"\n{'='*60}")
-        print(f"[sbxprobe] Generating combined report")
-        print(f"{'='*60}")
-        CombinedHTMLReportGenerator(
-            environment_label=args.env,
-            run_id=run_id,
-            output_dir=base_output,
-        ).write(scenario_results)
+            result = _run_scenario(
+                scenario        = scenario,
+                category_filter = args.categories,
+                env             = args.env,
+                run_id          = run_id,
+                output_dir      = output_dir,
+                log_dir         = log_dir,
+            )
+            if result is not None:
+                scenario_results.append(result)
 
-    print(f"\n[sbxprobe] Done.")
-    return 0 if scenario_results else 1
+        if is_multi and scenario_results:
+            print(f"\n{'='*60}")
+            print(f"[sbxprobe] Generating combined report")
+            print(f"{'='*60}")
+            CombinedHTMLReportGenerator(
+                environment_label=args.env,
+                run_id=run_id,
+                output_dir=base_output,
+            ).write(scenario_results)
+
+        print(f"\n[sbxprobe] Done.")
+        exit_code = 0 if scenario_results else 1
+
+    finally:
+        sys.stdout = _orig_stdout
+        sys.stderr = _orig_stderr
+        _logfile.close()
+
+    return exit_code
 
 
 if __name__ == "__main__":

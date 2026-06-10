@@ -133,22 +133,27 @@ def _validate(scenario: dict):
                     f"Valid: {sorted(VALID_CHECKS)}"
                 )
 
-    # ── pafish_keywords: if any category enables pafish, map must exist ────────
+    # ── pafish config: if any category enables pafish, section map must exist ─
     pafish_cats = [c for c in categories if c.get("pafish", False)]
     if pafish_cats:
-        pk = scenario.get("pafish_keywords", {})
-        if not pk:
+        ps = scenario.get("pafish_sections", {})
+        if not ps:
             raise ValueError(
-                "At least one category has pafish: true but 'pafish_keywords' "
-                "is missing from the scenario. Add a pafish_keywords mapping."
+                "At least one category has pafish: true but 'pafish_sections' "
+                "is missing from the scenario. Add a pafish_sections mapping."
             )
-        # Validate that every pafish_keywords category exists in the scenario
-        cat_ids = {c["id"] for c in categories}
-        for k in pk:
-            if k not in cat_ids:
+        valid_targets = {c["id"] for c in categories} | {"exclude"}
+        for section, cat_id in ps.items():
+            if cat_id not in valid_targets:
                 raise ValueError(
-                    f"pafish_keywords references unknown category '{k}'. "
-                    f"Known categories: {sorted(cat_ids)}"
+                    f"pafish_sections: section '{section}' maps to unknown "
+                    f"category '{cat_id}'. Valid: {sorted(valid_targets)}"
+                )
+        for label, cat_id in scenario.get("pafish_label_overrides", {}).items():
+            if cat_id not in valid_targets:
+                raise ValueError(
+                    f"pafish_label_overrides: label '{label}' maps to unknown "
+                    f"category '{cat_id}'. Valid: {sorted(valid_targets)}"
                 )
 
     # ── weights ────────────────────────────────────────────────────────────────

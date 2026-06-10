@@ -1,0 +1,45 @@
+[al-khaser version 0.82]
+-------------------------[Initialisation]-------------------------
+
+[*] You are running: Microsoft Windows 10  (build 19045) 64-bit
+[*] All APIs present and accounted for.
+Process is running under WOW64
+
+
+-------------------------[Generic Sandboxe/VM Detection]-------------------------
+[*] Checking if process loaded modules contains: avghookx.dll                                      [ GOOD ]
+[*] Checking if process loaded modules contains: avghooka.dll                                      [ GOOD ]
+[*] Checking if process loaded modules contains: snxhk.dll                                         [ GOOD ]
+[*] Checking if process loaded modules contains: sbiedll.dll                                       [ GOOD ]
+[*] Checking if process loaded modules contains: dbghelp.dll                                       [ GOOD ]
+[*] Checking if process loaded modules contains: api_log.dll                                       [ GOOD ]
+[*] Checking if process loaded modules contains: dir_watch.dll                                     [ GOOD ]
+[*] Checking if process loaded modules contains: pstorec.dll                                       [ GOOD ]
+[*] Checking if process loaded modules contains: vmcheck.dll                                       [ GOOD ]
+[*] Checking if process loaded modules contains: wpespy.dll                                        [ GOOD ]
+[*] Checking if process loaded modules contains: cmdvrt64.dll                                      [ GOOD ]
+[*] Checking if process loaded modules contains: cmdvrt32.dll                                      [ GOOD ]
+[*] Checking if process file name contains: sample.exe                                             [ GOOD ]
+[*] Checking if process file name contains: bot.exe                                                [ GOOD ]
+[*] Checking if process file name contains: sandbox.exe                                            [ GOOD ]
+[*] Checking if process file name contains: malware.exe                                            [ GOOD ]
+[*] Checking if process file name contains: test.exe                                               [ GOOD ]
+[*] Checking if process file name contains: klavme.exe                                             [ GOOD ]
+[*] Checking if process file name contains: myapp.exe                                              [ GOOD ]
+[*] Checking if process file name contains: testapp.exe                                            [ GOOD ]
+[*] Checking if process file name looks like a hash: al-khaser_x86                                 [ GOOD ]
+[*] Checking if username matches : CurrentUser                                                     [ GOOD ]
+[*] Checking if username matches : Sandbox                                                         [ GOOD ]
+[*] Checking if username matches : Emily                                                           [ GOOD ]
+[*] Checking if username matches : HAPUBWS                                                         [ GOOD ]
+[*] Checking if username matches : Hong Lee                                                        [ GOOD ]
+[*] Checking if username matches : IT-ADMIN                                                        [ GOOD ]
+[*] Checking if username matches : Johnson                                                         [ GOOD ]
+[*] Checking if username matches : Miller                                                          [ GOOD ]
+[*] Checking if username matches : milozs                                                          [ GOOD ]
+[*] Checking if username matches : Peter Wilson                                                    [ GOOD ]
+[*] Checking if username matches : timmy                                                           [ GOOD ]
+[*] Checking if username matches : user                                                            [ GOOD ]
+[*] Checking if username matches : sand box                                                        [ GOOD ]
+[*] Checking if username matches : malware                                                         [ GOOD ]
+[*] 

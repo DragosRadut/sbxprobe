@@ -1,0 +1,66 @@
+[al-khaser version 0.82]
+-------------------------[Initialisation]-------------------------
+
+[*] You are running: Microsoft Windows 10  (build 19045) 64-bit
+[*] All APIs present and accounted for.
+Process is running under WOW64
+
+
+-------------------------[Analysis-tools]-------------------------
+[*] Checking process of malware analysis tool: ollydbg.exe                                         [ GOOD ]
+[*] Checking process of malware analysis tool: ollyice.exe                                         [ GOOD ]
+[*] Checking process of malware analysis tool: ProcessHacker.exe                                   [ GOOD ]
+[*] Checking process of malware analysis tool: tcpview.exe                                         [ GOOD ]
+[*] Checking process of malware analysis tool: autoruns.exe                                        [ GOOD ]
+[*] Checking process of malware analysis tool: autorunsc.exe                                       [ GOOD ]
+[*] Checking process of malware analysis tool: filemon.exe                                         [ GOOD ]
+[*] Checking process of malware analysis tool: procmon.exe                                         [ GOOD ]
+[*] Checking process of malware analysis tool: regmon.exe                                          [ GOOD ]
+[*] Checking process of malware analysis tool: procexp.exe                                         [ GOOD ]
+[*] Checking process of malware analysis tool: idaq.exe                                            [ GOOD ]
+[*] Checking process of malware analysis tool: idaq64.exe                                          [ GOOD ]
+[*] Checking process of malware analysis tool: ImmunityDebugger.exe                                [ GOOD ]
+[*] Checking process of malware analysis tool: Wireshark.exe                                       [ GOOD ]
+[*] Checking process of malware analysis tool: dumpcap.exe                                         [ GOOD ]
+[*] Checking process of malware analysis tool: HookExplorer.exe                                    [ GOOD ]
+[*] Checking process of malware analysis tool: ImportREC.exe                                       [ GOOD ]
+[*] Checking process of malware analysis tool: PETools.exe                                         [ GOOD ]
+[*] Checking process of malware analysis tool: LordPE.exe                                          [ GOOD ]
+[*] Checking process of malware analysis tool: SysInspector.exe                                    [ GOOD ]
+[*] Checking process of malware analysis tool: proc_analyzer.exe                                   [ GOOD ]
+[*] Checking process of malware analysis tool: sysAnalyzer.exe                                     [ GOOD ]
+[*] Checking process of malware analysis tool: sniff_hit.exe                                       [ GOOD ]
+[*] Checking process of malware analysis tool: windbg.exe                                          [ GOOD ]
+[*] Checking process of malware analysis tool: joeboxcontrol.exe                                   [ GOOD ]
+[*] Checking process of malware analysis tool: joeboxserver.exe                                    [ GOOD ]
+[*] Checking process of malware analysis tool: ResourceHacker.exe                                  [ GOOD ]
+[*] Checking process of malware analysis tool: x32dbg.exe                                          [ GOOD ]
+[*] Checking process of malware analysis tool: x64dbg.exe                                          [ GOOD ]
+[*] Checking process of malware analysis tool: Fiddler.exe                                         [ GOOD ]
+[*] Checking process of malware analysis tool: httpdebugger.exe                                    [ GOOD ]
+[*] Checking process of malware analysis tool: cheatengine-i386.exe                                [ GOOD ]
+[*] Checking process of malware analysis tool: cheatengine-x86_64.exe                              [ GOOD ]
+[*] Checking process of malware analysis tool: cheatengine-x86_64-SSE4-AVX2.exe                    [ GOOD ]
+[*] Checking process of malware analysis tool: frida-helper-32.exe                                 [ GOOD ]
+[*] Checking process of malware analysis tool: frida-helper-64.exe                                 [ GOOD ]
+[*] Checking process of malware analysis tool: ghidra.exe                                          [ GOOD ]
+[*] Checking process of malware analysis tool: radare2.exe                                         [ GOOD ]
+[*] Checking process of malware analysis tool: r2.exe                                              [ GOOD ]
+[*] Checking process of malware analysis tool: cutter.exe                                          [ GOOD ]
+[*] Checking process of malware analysis tool: dnSpy.exe                                           [ GOOD ]
+[*] Checking process of malware analysis tool: dnSpyEx.exe                                         [ GOOD ]
+[*] Checking process of malware analysis tool: ILSpy.exe                                           [ GOOD ]
+[*] Checking process of malware analysis tool: HxD.exe                                             [ GOOD ]
+[*] Checking process of malware analysis tool: SystemInformer.exe                                  [ GOOD ]
+[*] Checking process of malware analysis tool: DetectItEasy.exe                                    [ GOOD ]
+[*] Checking process of malware analysis tool: FakeNet.exe                                         [ GOOD ]
+[*] Checking process of malware analysis tool: ResourceHacker.exe                                  [ GOOD ]
+Begin AntiDisassmConstantCondition
+Begin AntiDisassmAsmJmpSameTarget
+Begin AntiDisassmImpossibleDiasassm
+Begin AntiDisassmFunctionPointer
+Begin AntiDisassmReturnPointerAbuse
+Begin AntiDisassmSEHMisuse
+
+
+Analysis done, I hope you didn't get red flags :)
