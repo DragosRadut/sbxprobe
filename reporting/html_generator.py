@@ -101,6 +101,13 @@ tr:hover td { background: #1e293b66; }
             background: #1e1b4b; padding: 1px 5px; border-radius: 3px; }
 .cpr-link:hover { opacity: 1; text-decoration: none; }
 
+/* ── Artifact category filters ── */
+.artifact-filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.af-btn { background: #0f172a; color: #64748b; border: 1px solid #334155;
+          padding: 3px 10px; border-radius: 4px; cursor: pointer;
+          font-family: inherit; font-size: .75em; }
+.af-btn.active { background: #1e3a5f; color: #38bdf8; border-color: #38bdf8; }
+
 /* ── Filters ── */
 .filters { margin-bottom: 8px; display: flex; gap: 6px; flex-wrap: wrap; }
 .filters button { background: #1e293b; color: #94a3b8; border: 1px solid #334155;
@@ -118,6 +125,17 @@ function filterChecks(val) {
   var btns = document.querySelectorAll('.filters button');
   for (var j = 0; j < btns.length; j++) {
     btns[j].classList.toggle('active', btns[j].dataset.filter === val);
+  }
+}
+function filterArtifacts(btn) {
+  var cat = btn.dataset.cat;
+  var items = document.querySelectorAll('#artifacts-list .artifact');
+  for (var i = 0; i < items.length; i++) {
+    items[i].style.display = (cat === 'all' || items[i].dataset.cat === cat) ? '' : 'none';
+  }
+  var btns = document.querySelectorAll('.af-btn');
+  for (var j = 0; j < btns.length; j++) {
+    btns[j].classList.toggle('active', btns[j] === btn);
   }
 }
 """
@@ -184,10 +202,27 @@ class HTMLReportGenerator:
         detected_checks = [c for c in checks if c.normalized == DETECTED]
         detected_html = ""
         if detected_checks:
+            # Build per-category counts for filter buttons
+            from collections import OrderedDict
+            cat_counts: dict = OrderedDict()
+            for r in detected_checks:
+                cat_counts[r.category_id] = cat_counts.get(r.category_id, (r.category_name, 0))
+                cat_counts[r.category_id] = (r.category_name, cat_counts[r.category_id][1] + 1)
+
+            filter_btns = (
+                f"<button class='af-btn active' data-cat='all' onclick='filterArtifacts(this)'"
+                f">All ({len(detected_checks)})</button>"
+            )
+            for cat_id, (cat_name, cnt) in cat_counts.items():
+                filter_btns += (
+                    f"<button class='af-btn' data-cat='{_e(cat_id)}' onclick='filterArtifacts(this)'"
+                    f">{_e(cat_name)} ({cnt})</button>"
+                )
+
             items = ""
             for r in detected_checks:
-                desc     = _CHECK_DESCRIPTIONS.get(r.check_id, "")
-                tool_cls = "tool-badge corroborated" if r.deduplicated else "tool-badge"
+                desc          = _CHECK_DESCRIPTIONS.get(r.check_id, "")
+                tool_cls      = "tool-badge corroborated" if r.deduplicated else "tool-badge"
                 mitre_entry   = _CHECK_MITRE.get(r.check_id, {})
                 mitre_id      = mitre_entry.get("mitre", "")      if isinstance(mitre_entry, dict) else ""
                 checkpoint_url= mitre_entry.get("checkpoint", "") if isinstance(mitre_entry, dict) else ""
@@ -200,7 +235,7 @@ class HTMLReportGenerator:
                     " target='_blank' title='Checkpoint Evasions Encyclopedia'>CPR</a>"
                 ) if checkpoint_url else ""
                 items += (
-                    f"<div class='artifact'>"
+                    f"<div class='artifact' data-cat='{_e(r.category_id)}'>"
                     f"<div class='artifact-label'>{_e(r.label)}</div>"
                     + (f"<div class='artifact-desc'>{_e(desc)}</div>" if desc else "")
                     + f"<div class='artifact-tool'><span class='{tool_cls}'>{_e(r.tool)}</span>"
@@ -210,7 +245,8 @@ class HTMLReportGenerator:
             detected_html = f"""
 <div class="detected-summary">
   <h3>Detected Artifacts ({len(detected_checks)})</h3>
-  {items}
+  <div class="artifact-filters">{filter_btns}</div>
+  <div id="artifacts-list">{items}</div>
 </div>"""
 
         # ── Checks table ─────────────────────────────────────────────────────

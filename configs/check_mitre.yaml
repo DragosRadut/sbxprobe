@@ -1767,3 +1767,924 @@ checking_if_username_matches_malware:
   description: >
     Username "malware" is used by some sandbox platforms as the default account
     under which submitted samples are executed.
+
+
+# ═══════════════════════════════════════════════════════════════════
+# FULL AL-KHASER VM CHECK COVERAGE — all slugs from v0.82 output
+# (VirtualBox, VMware, VPC, QEMU, Xen, KVM, Wine, Parallels, Hyper-V)
+# ═══════════════════════════════════════════════════════════════════
+
+# ── Additional GEN_SANDBOX: hostname + combined env checks ────────
+checking_if_username_matches_maltest:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Username "maltest" is a known sandbox account name used in automated malware
+    analysis environments.
+
+checking_if_username_matches_test_user:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Username "test user" is a generic placeholder account used by sandbox platforms
+    to simulate a basic user session.
+
+checking_if_username_matches_virus:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Username "virus" is a known sandbox staging account name; no legitimate user
+    account would carry this identifier.
+
+checking_if_username_matches_john_doe:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Username "John Doe" is a known sandbox default account intended to simulate
+    a plausible but generic user identity.
+
+checking_if_hostname_matches_sandbox:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Hostname "SANDBOX" directly reveals a sandbox-configured machine name; no
+    production deployment uses this as a computer name.
+
+checking_if_hostname_matches_7silvia:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Hostname "7SILVIA" is a known sandbox environment default machine name
+    associated with specific automated analysis platforms.
+
+checking_if_hostname_matches_hanspeter_pc:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Hostname "HANSPETER-PC" is a known sandbox default machine name used to
+    simulate a plausible German-named workstation.
+
+checking_if_hostname_matches_john_pc:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Hostname "JOHN-PC" is a known sandbox default machine name used to simulate
+    a plausible personal workstation.
+
+checking_if_hostname_matches_mueller_pc:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Hostname "MUELLER-PC" is a known sandbox default machine name used in
+    specific automated malware analysis environments.
+
+checking_if_hostname_matches_win7_traps:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Hostname "WIN7-TRAPS" is associated with specific sandbox environments;
+    its presence directly identifies an analysis machine.
+
+checking_if_hostname_matches_fortinet:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Hostname "FORTINET" identifies a Fortinet FortiSandbox environment; malware
+    uses this to detect and evade Fortinet's analysis platform.
+
+checking_if_hostname_matches_tequilaboomboom:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Hostname "TEQUILABOOMBOOM" is a known sandbox default machine name appearing
+    in specific automated analysis environments.
+
+checking_whether_username_is_wilber_and_netbios_name_starts_with_sc_or_sw:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Combined check for username "Wilber" with NetBIOS name starting with "SC" or
+    "SW"; this combination is specific to known sandbox configurations.
+
+checking_whether_username_is_admin_and_netbios_name_is_systemit:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Combined check for username "admin" and NetBIOS name "SystemIT"; identifies
+    a specific sandbox environment configuration.
+
+checking_whether_username_is_admin_and_dns_hostname_is_klone_x64_pc:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Combined check for username "admin" and DNS hostname "KLONE_X64-PC";
+    identifies a known cloned sandbox image.
+
+checking_whether_username_is_john_and_two_sandbox_files_exist:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Combined check for username "John" with two known sandbox marker files present;
+    multi-factor environment fingerprinting to reduce false positives.
+
+checking_whether_four_known_sandbox_email_file_paths_exist:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Checks for four known sandbox-specific email file paths (dummy inbox items
+    placed by sandbox environments to simulate a used workstation).
+
+checking_whether_three_known_sandbox_foobar_files_exist:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/generic-os-queries.html"
+  description: >
+    Checks for three known sandbox placeholder files with "foobar" names; these
+    are placed by sandbox environments as workstation activity simulation.
+
+checking_processes_looking_glass_host_exe:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    looking-glass-host.exe is the host component of the Looking Glass KVM
+    frame capture tool; its presence reveals a KVM-based analysis environment.
+
+checking_processes_vddsystray_exe:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    VDDSysTray.exe is the system tray component of the Virtual Display Driver
+    used in some virtualised analysis environments.
+
+# ── Additional GEN_SANDBOX: WMI hardware/BIOS queries ────────────
+checking_serialnumber_from_bios_using_wmi:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/wmi.html"
+  description: >
+    WMI Win32_BIOS.SerialNumber queried; VirtualBox and VMware return generic or
+    hardcoded serial numbers (e.g., "0") that are absent on physical hardware.
+
+checking_model_from_computersystem_using_wmi:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/wmi.html"
+  description: >
+    WMI Win32_ComputerSystem.Model returns "VirtualBox" or "VMware Virtual Platform"
+    on hypervisors; physical hardware returns a real product model name.
+
+checking_manufacturer_from_computersystem_using_wmi:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/wmi.html"
+  description: >
+    WMI Win32_ComputerSystem.Manufacturer returns "innotek GmbH" (VirtualBox) or
+    "VMware, Inc." on VMs; physical hardware returns OEM names like Dell or Lenovo.
+
+checking_processid_using_wmi:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/wmi.html"
+  description: >
+    WMI Win32_Process query checking for unusually low process count or
+    specific sandbox process identifiers via WMI enumeration.
+
+checking_win32_cachememory_with_wmi:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/wmi.html"
+  description: >
+    Win32_CacheMemory (CPU cache information) returns no instances in VMs because
+    hypervisors do not expose CPU cache topology to guest WMI providers.
+
+checking_win32_physicalmemory_with_wmi:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/wmi.html"
+  description: >
+    Win32_PhysicalMemory (DIMM slot information) returns no instances in most VMs;
+    hypervisors do not expose physical memory module data to guests.
+
+checking_win32_memorydevice_with_wmi:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/wmi.html"
+  description: >
+    Win32_MemoryDevice returns no instances in virtual environments; absence of
+    physical memory device objects is a reliable VM indicator.
+
+checking_win32_memoryarray_with_wmi:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/wmi.html"
+  description: >
+    Win32_MemoryArray (memory bank configuration) returns no instances in VMs;
+    physical hardware always has at least one memory array.
+
+checking_win32_smbiosmemory_with_wmi:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/wmi.html"
+  description: >
+    Win32_SMBIOSMemory returns no instances in VMs because hypervisors do not
+    populate SMBIOS memory type 17 (Memory Device) structures.
+
+checking_thermalzoneinfo_performance_counters_with_wmi:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/wmi.html"
+  description: >
+    ThermalZoneInformation performance counters are absent in VMs; physical
+    machines always expose at least one thermal zone.
+
+checking_cim_memory_with_wmi:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/wmi.html"
+  description: >
+    CIM_Memory returns no instances in virtual environments; the CIM memory
+    hierarchy is unpopulated when no physical memory is present.
+
+checking_cim_sensor_with_wmi:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/wmi.html"
+  description: >
+    CIM_Sensor (base class for all hardware sensors) returns no instances in VMs;
+    absence of all sensor types confirms a virtual environment.
+
+checking_cim_numericsensor_with_wmi:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/wmi.html"
+  description: >
+    CIM_NumericSensor (voltage, temperature, fan) returns no instances in VMs;
+    physical hardware always has at least voltage and temperature sensors.
+
+checking_cim_physicalconnector_with_wmi:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/wmi.html"
+  description: >
+    CIM_PhysicalConnector (physical I/O connectors) returns no instances in VMs;
+    absence of connector data distinguishes virtual from physical hardware.
+
+checking_cim_slot_with_wmi:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/wmi.html"
+  description: >
+    CIM_Slot (motherboard expansion slots) returns no instances in VMs;
+    physical hardware always has at least one PCIe or PCI slot populated.
+
+checking_win32_bus_from_wmi:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/wmi.html"
+  description: >
+    Win32_Bus WMI query returns VirtualBox-specific bus identifiers; physical
+    machines have different bus controller signatures.
+
+checking_win32_baseboard_from_wmi:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/wmi.html"
+  description: >
+    Win32_BaseBoard.Manufacturer/Product returns "Oracle Corporation" and
+    "VirtualBox" in VirtualBox guests; reveals the hypervisor vendor via WMI.
+
+checking_mac_address_from_wmi:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/wmi.html"
+  description: >
+    WMI Win32_NetworkAdapter.MACAddress query cross-checks the MAC against known
+    VM vendor OUI prefixes, supplementing the direct network API check.
+
+checking_nteventlog_from_wmi:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/wmi.html"
+  description: >
+    WMI Win32_NTEventLogFile query checks event log state; sandboxes often have
+    minimal or cleared event logs characteristic of freshly provisioned images.
+
+# ── VirtualBox: individual registry keys (al-khaser detailed scan) ─
+checking_reg_key_hardware_description_system_identifier_is_set_to_vbox:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    HKLM\HARDWARE\Description\System!Identifier containing "VBOX" is a direct
+    VirtualBox firmware fingerprint in the hardware description registry.
+
+checking_reg_key_hardware_description_system_videobiosversion_is_set_to_virtualbox:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    HKLM\HARDWARE\Description\System!VideoBiosVersion containing "VIRTUALBOX"
+    identifies the VirtualBox virtual GPU BIOS string.
+
+checking_reg_key_hardware_description_system_systembiosdate_is_set_to_06_23_99:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    HKLM\HARDWARE\Description\System!SystemBiosDate "06/23/99" is the hardcoded
+    VirtualBox BIOS date; no real hardware uses this date.
+
+checking_virtualbox_guest_additions_directory:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    Presence of the VirtualBox Guest Additions installation directory
+    (C:\Program Files\Oracle\VirtualBox Guest Additions) confirms a VirtualBox guest.
+
+checking_file_c_windows_system32_drivers_vboxguest_sys:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    VBoxGuest.sys is the VirtualBox guest kernel driver; its presence in
+    System32\drivers confirms VirtualBox Guest Additions.
+
+checking_file_c_windows_system32_drivers_vboxsf_sys:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    VBoxSF.sys is the VirtualBox Shared Folder filesystem driver; its presence
+    reveals VirtualBox with shared-folder support enabled.
+
+checking_file_c_windows_system32_drivers_vboxvideo_sys:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    VBoxVideo.sys is the VirtualBox virtual display driver; its presence confirms
+    VirtualBox Guest Additions are installed.
+
+checking_file_c_windows_system32_vboxdisp_dll:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    vboxdisp.dll is the VirtualBox display driver DLL installed by Guest Additions;
+    its presence identifies a VirtualBox environment.
+
+checking_file_c_windows_system32_vboxhook_dll:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    vboxhook.dll is a VirtualBox hook library installed by Guest Additions for
+    seamless mode and clipboard integration; confirms VirtualBox guest.
+
+checking_file_c_windows_system32_vboxmrxnp_dll:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    vboxmrxnp.dll is the VirtualBox multiple redirector network provider DLL;
+    present only in VirtualBox guests with shared folders.
+
+checking_file_c_windows_system32_vboxogl_dll:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    vboxogl.dll is the VirtualBox OpenGL passthrough library; its presence
+    identifies a VirtualBox guest with 3D acceleration support.
+
+checking_file_c_windows_system32_vboxoglarrayspu_dll:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    VirtualBox OpenGL SPU (Stream Processing Unit) DLL for array operations;
+    a VirtualBox-specific component of the Chromium-based OpenGL stack.
+
+checking_file_c_windows_system32_vboxoglcrutil_dll:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    VirtualBox OpenGL Chromium utility DLL; part of the VirtualBox 3D acceleration
+    stack, present only inside VirtualBox guests.
+
+checking_file_c_windows_system32_vboxoglerrorspu_dll:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    VirtualBox OpenGL error SPU DLL; a component of the VirtualBox Chromium-based
+    3D acceleration stack.
+
+checking_file_c_windows_system32_vboxoglfeedbackspu_dll:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    VirtualBox OpenGL feedback SPU DLL; part of the VirtualBox 3D acceleration
+    Chromium pipeline, absent on physical machines.
+
+checking_file_c_windows_system32_vboxoglpackspu_dll:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    VirtualBox OpenGL pack SPU DLL for geometry packing; a VirtualBox-only
+    OpenGL component.
+
+checking_file_c_windows_system32_vboxoglpassthroughspu_dll:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    VirtualBox OpenGL passthrough SPU DLL; directly passes OpenGL calls through
+    the VirtualBox 3D pipeline, present only inside VirtualBox guests.
+
+checking_file_c_windows_system32_vboxservice_exe:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    VBoxService.exe in System32 (not running, just file presence) confirms VirtualBox
+    Guest Additions are installed; file path check is independent of process state.
+
+checking_file_c_windows_system32_vboxtray_exe:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    VBoxTray.exe in System32 confirms VirtualBox Guest Additions installation;
+    file presence is independent of whether the service is currently running.
+
+checking_file_c_windows_system32_vboxcontrol_exe:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    VBoxControl.exe is the VirtualBox Guest Additions control program installed
+    in System32; its presence directly identifies a VirtualBox guest.
+
+checking_reg_key_software_oracle_virtualbox_guest_additions:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    HKLM\SOFTWARE\Oracle\VirtualBox Guest Additions key created by Guest Additions
+    installer; a definitive VirtualBox guest indicator.
+
+checking_reg_key_system_controlset001_services_vboxguest:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    HKLM\SYSTEM\ControlSet001\Services\VBoxGuest service key installed by VBoxGuest.sys;
+    its presence identifies a VirtualBox guest VM.
+
+checking_reg_key_system_controlset001_services_vboxmouse:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    HKLM\SYSTEM\ControlSet001\Services\VBoxMouse service key installed by VBoxMouse.sys;
+    present only in VirtualBox guests with Guest Additions.
+
+checking_reg_key_system_controlset001_services_vboxservice:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    HKLM\SYSTEM\ControlSet001\Services\VBoxService service key for the VirtualBox
+    Guest Additions service; a definitive VirtualBox indicator.
+
+checking_reg_key_system_controlset001_services_vboxsf:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    HKLM\SYSTEM\ControlSet001\Services\VBoxSF service key for the VirtualBox Shared
+    Folder driver; present when Guest Additions with shared folders are installed.
+
+checking_reg_key_system_controlset001_services_vboxvideo:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    HKLM\SYSTEM\ControlSet001\Services\VBoxVideo service key for the VirtualBox
+    display driver; a VirtualBox-specific Guest Additions component.
+
+checking_reg_key_system_currentcontrolset_enum_pci_ven_5333:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    PCI vendor ID 0x5333 (S3 Incorporated) is used by both VirtualBox (VGA adapter)
+    and Microsoft Virtual PC; its presence in Enum\PCI identifies either hypervisor.
+
+checking_device_vboxminirdrdn:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    \\.\VBoxMiniRdrDN is the VirtualBox Mini Redirector device for shared folder
+    network redirection; exists only inside VirtualBox guests.
+
+checking_device_pipe_vboxminirddn:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    \\.\pipe\VBoxMiniRdDN is the named pipe endpoint for the VirtualBox Mini
+    Redirector; present only inside VirtualBox guests.
+
+checking_device_vboxtrayipc:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    \\.\VBoxTrayIPC is the VBoxTray IPC device used for communication between
+    VBoxService and VBoxTray; present only inside VirtualBox guests.
+
+checking_device_pipe_vboxtrayipc:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    \\.\pipe\VBoxTrayIPC is the named pipe endpoint for VBoxTray IPC
+    communication; a VirtualBox-specific device present only in guests.
+
+checking_win32_pnpdevice_name_from_wmi_for_vbox_controller_hardware:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/wmi.html"
+  description: >
+    WMI Win32_PnPEntity.Name containing VirtualBox controller hardware strings
+    (e.g., "VirtualBox IDE Controller") identifies virtual storage adapters.
+
+checking_acpi_tables:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/firmware-tables.html"
+  description: >
+    Raw ACPI table scan finds hypervisor-specific strings; al-khaser checks both
+    VirtualBox (VBOX prefix) and QEMU (QEMU string) ACPI table signatures.
+
+# ── VMware: individual registry and file checks ───────────────────
+checking_reg_key_hardware_devicemap_scsi_scsi_port_0_scsi_bus_0_target_id_0_logical_unit_id_0:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    HARDWARE\DEVICEMAP\Scsi\Port 0\Bus 0\Target 0\Lun 0\Identifier containing
+    "VMware" identifies the VMware virtual SCSI controller on port 0.
+
+checking_reg_key_hardware_devicemap_scsi_scsi_port_1_scsi_bus_0_target_id_0_logical_unit_id_0:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    HARDWARE\DEVICEMAP\Scsi\Port 1\Bus 0\Target 0\Lun 0\Identifier check for
+    VMware virtual SCSI controller on port 1.
+
+checking_reg_key_hardware_devicemap_scsi_scsi_port_2_scsi_bus_0_target_id_0_logical_unit_id_0:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    HARDWARE\DEVICEMAP\Scsi\Port 2\Bus 0\Target 0\Lun 0\Identifier check for
+    VMware virtual SCSI controller on port 2.
+
+checking_reg_key_system_controlset001_control_systeminformation:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    HKLM\SYSTEM\ControlSet001\Control\SystemInformation contains system
+    identification strings; VMware injects its product name into these values.
+
+checking_reg_key_software_vmware_inc_vmware_tools:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    HKLM\SOFTWARE\VMware, Inc.\VMware Tools key created by VMware Tools installer;
+    its presence directly identifies a VMware guest VM.
+
+checking_reg_key_system_currentcontrolset_enum_pci_ven_15ad:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    PCI vendor ID 0x15AD is assigned exclusively to VMware; any device under
+    Enum\PCI\VEN_15AD* confirms a VMware guest environment.
+
+checking_file_c_windows_system32_drivers_vmmouse_sys:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    vmmouse.sys is the VMware virtual mouse driver; file presence confirms
+    VMware Tools installation (independent of running state).
+
+checking_file_c_windows_system32_drivers_vmusb_sys:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    vmusb.sys is the VMware USB arbitration driver; its presence confirms
+    VMware Tools with USB passthrough support.
+
+checking_file_c_windows_system32_drivers_vm3dmp_sys:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    vm3dmp.sys is the VMware SVGA 3D driver for hardware-accelerated 3D graphics;
+    its presence confirms a VMware guest with 3D support enabled.
+
+checking_file_c_windows_system32_drivers_vmci_sys:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    vmci.sys is the VMware VMCI Bus driver for fast guest-host communication;
+    its presence identifies a VMware guest VM.
+
+checking_file_c_windows_system32_drivers_vmhgfs_sys:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    vmhgfs.sys is the VMware Host-Guest Filesystem driver; file presence confirms
+    VMware Tools with shared folder support.
+
+checking_file_c_windows_system32_drivers_vmmemctl_sys:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    vmmemctl.sys is the VMware memory balloon driver that reclaims guest memory;
+    its presence confirms a VMware guest running with memory management tools.
+
+checking_file_c_windows_system32_drivers_vmx86_sys:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    vmx86.sys is the VMware VMX kernel driver; its presence in System32\drivers
+    identifies VMware Workstation or Player installed on the guest.
+
+checking_file_c_windows_system32_drivers_vmrawdsk_sys:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    vmrawdsk.sys is the VMware raw disk access driver; its presence confirms
+    a VMware guest with raw disk mapping enabled.
+
+checking_file_c_windows_system32_drivers_vmusbmouse_sys:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    vmusbmouse.sys is the VMware USB mouse driver; its presence in System32\drivers
+    confirms VMware Tools are installed.
+
+checking_file_c_windows_system32_drivers_vmkdb_sys:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    vmkdb.sys is a VMware kernel debugger bridge driver; its presence reveals
+    a VMware environment with debugging support.
+
+checking_file_c_windows_system32_drivers_vmnetuserif_sys:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    vmnetuserif.sys is the VMware network user interface driver for NAT/bridged
+    networking; its presence confirms VMware Tools installation.
+
+checking_file_c_windows_system32_drivers_vmnetadapter_sys:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    vmnetadapter.sys is the VMware virtual network adapter driver; its presence
+    confirms VMware Tools are installed in a VMware guest.
+
+checking_vmware_directory:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    Presence of the VMware Tools installation directory (C:\Program Files\VMware)
+    confirms VMware Tools are installed in a VMware guest VM.
+
+# ── Virtual PC (Microsoft) ────────────────────────────────────────
+checking_virtual_pc_processes_vmsrvc_exe:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    VMSrvc.exe is the Microsoft Virtual PC Virtual Machine Additions service;
+    its presence in the process list confirms a Virtual PC guest.
+
+checking_virtual_pc_processes_vmusrvc_exe:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    VMUSrvc.exe is the Microsoft Virtual PC user-mode service; its presence
+    identifies a Microsoft Virtual PC or Virtual Server guest.
+
+checking_reg_key_software_microsoft_virtual_machine_guest_parameters:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    HKLM\SOFTWARE\Microsoft\Virtual Machine\Guest\Parameters is created by
+    Microsoft Virtual PC Guest Additions; a definitive Virtual PC indicator.
+
+# ── QEMU-specific checks ──────────────────────────────────────────
+checking_reg_key_hardware_description_system:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    HKLM\HARDWARE\Description\System registry values checked for QEMU-specific
+    firmware strings that differ from physical hardware BIOS identifiers.
+
+checking_reg_key_system_currentcontrolset_enum_pci_ven_1b36:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    PCI vendor ID 0x1B36 is assigned to Red Hat (QEMU); any device under
+    Enum\PCI\VEN_1B36* confirms a QEMU/KVM guest environment.
+
+checking_qemu_processes_qemu_ga_exe:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    qemu-ga.exe is the QEMU Guest Agent; its presence in the process list
+    confirms a QEMU-based VM with guest agent support.
+
+checking_qemu_processes_vdagent_exe:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    vdagent.exe is the SPICE VD Agent process for QEMU/KVM virtual machines;
+    its presence identifies a SPICE-enabled QEMU/KVM guest.
+
+checking_qemu_processes_vdservice_exe:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    vdservice.exe is the SPICE VD Agent service for QEMU/KVM; its presence
+    confirms a QEMU guest running with SPICE display.
+
+checking_qemu_directory_c_program_files_qemu_ga:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    C:\Program Files\qemu-ga directory presence confirms the QEMU Guest Agent
+    is installed in a QEMU/KVM virtual machine.
+
+checking_qemu_directory_c_program_files_spice_guest_tools:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    C:\Program Files\SPICE Guest Tools directory confirms SPICE tools are installed,
+    identifying a QEMU/KVM guest running the SPICE display protocol.
+
+# ── Xen-specific checks ───────────────────────────────────────────
+checking_reg_key_system_currentcontrolset_enum_pci_ven_5853:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    PCI vendor ID 0x5853 is assigned to Xen (XenSource); devices under
+    Enum\PCI\VEN_5853* confirm a Xen hypervisor guest environment.
+
+checking_citrix_xen_process_xenservice_exe:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    xenservice.exe is the Citrix XenServer/XCP-ng guest utilities service;
+    its presence confirms a Xen or Citrix hypervisor guest.
+
+# ── KVM / VirtIO checks ───────────────────────────────────────────
+checking_file_c_windows_system32_drivers_balloon_sys:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    balloon.sys is the KVM VirtIO memory balloon driver; its presence confirms
+    a KVM/QEMU guest with VirtIO memory management.
+
+checking_file_c_windows_system32_drivers_netkvm_sys:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    netkvm.sys is the KVM VirtIO network driver; its presence in System32\drivers
+    identifies a KVM/QEMU guest with VirtIO networking.
+
+checking_file_c_windows_system32_drivers_pvpanic_sys:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    pvpanic.sys is the KVM/QEMU virtual panic device driver; its presence
+    confirms a QEMU guest with the pvpanic device enabled.
+
+checking_file_c_windows_system32_drivers_viofs_sys:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    viofs.sys is the VirtIO-FS filesystem driver for KVM/QEMU; its presence
+    identifies a KVM guest with VirtIO filesystem sharing enabled.
+
+checking_file_c_windows_system32_drivers_viogpudo_sys:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    viogpudo.sys is the VirtIO GPU display driver for KVM; its presence
+    confirms a KVM/QEMU guest with the VirtIO GPU device.
+
+checking_file_c_windows_system32_drivers_vioinput_sys:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    vioinput.sys is the VirtIO input device driver for KVM/QEMU; its presence
+    identifies a KVM guest with VirtIO input devices.
+
+checking_file_c_windows_system32_drivers_viorng_sys:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    viorng.sys is the VirtIO entropy (random number generator) device driver;
+    its presence confirms a KVM/QEMU guest with VirtIO RNG support.
+
+checking_file_c_windows_system32_drivers_vioscsi_sys:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    vioscsi.sys is the VirtIO SCSI storage driver for KVM/QEMU; its presence
+    identifies a KVM guest with VirtIO block device support.
+
+checking_file_c_windows_system32_drivers_vioser_sys:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    vioser.sys is the VirtIO serial port driver for KVM/QEMU; its presence
+    confirms a KVM guest with VirtIO serial device enabled.
+
+checking_file_c_windows_system32_drivers_viostor_sys:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    viostor.sys is the VirtIO block storage driver for KVM/QEMU; its presence
+    identifies a KVM guest using VirtIO for primary disk I/O.
+
+checking_reg_key_system_controlset001_services_vioscsi:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    HKLM\SYSTEM\ControlSet001\Services\vioscsi service key for the VirtIO SCSI
+    driver; present only in KVM/QEMU guests.
+
+checking_reg_key_system_controlset001_services_viostor:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    HKLM\SYSTEM\ControlSet001\Services\viostor service key for the VirtIO block
+    storage driver; a KVM/QEMU guest indicator.
+
+checking_reg_key_system_controlset001_services_virtio_fs_service:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    HKLM\SYSTEM\ControlSet001\Services\VirtIO-FS Service key for the VirtIO
+    filesystem service; present only in KVM/QEMU guests.
+
+checking_reg_key_system_controlset001_services_virtioserial:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    HKLM\SYSTEM\ControlSet001\Services\VirtioSerial key for the VirtIO serial
+    port driver; a KVM/QEMU guest indicator.
+
+checking_reg_key_system_controlset001_services_balloon:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    HKLM\SYSTEM\ControlSet001\Services\BALLOON key for the KVM VirtIO balloon
+    memory driver; confirms a KVM/QEMU guest.
+
+checking_reg_key_system_controlset001_services_balloonservice:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    HKLM\SYSTEM\ControlSet001\Services\BalloonService key for the QEMU/KVM
+    memory balloon service component; a KVM guest indicator.
+
+checking_reg_key_system_controlset001_services_netkvm:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    HKLM\SYSTEM\ControlSet001\Services\netkvm service key for the VirtIO network
+    driver; present only in KVM/QEMU guests.
+
+checking_reg_key_system_currentcontrolset_enum_pci_ven_1af4:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    PCI vendor ID 0x1AF4 is the Red Hat VirtIO device vendor; devices under
+    Enum\PCI\VEN_1AF4* confirm a KVM/QEMU guest with VirtIO devices.
+
+checking_kvm_virio_directory:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    Presence of the VirtIO driver installation directory (C:\Program Files\VirtIO)
+    confirms KVM/QEMU VirtIO guest drivers are installed.
+
+# ── Wine-specific checks ──────────────────────────────────────────
+checking_wine_via_dll_exports:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    GetProcAddress checking for Wine-specific exports (wine_get_version,
+    wine_get_unix_file_name) in standard Windows DLLs; their presence confirms Wine.
+
+checking_reg_key_software_wine:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    HKLM\SOFTWARE\Wine registry key created by the Wine runtime; its presence
+    under HKLM (vs HKCU) identifies a system-wide Wine installation.
+
+# ── Parallels-specific checks ─────────────────────────────────────
+checking_reg_key_system_currentcontrolset_enum_pci_ven_1ab8:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/registry.html"
+  description: >
+    PCI vendor ID 0x1AB8 is assigned to Parallels; devices under
+    Enum\PCI\VEN_1AB8* confirm a Parallels Desktop guest environment.
+
+checking_parallels_processes_prl_cc_exe:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    prl_cc.exe is the Parallels Coherence Controller process; its presence in
+    the process list confirms a Parallels Desktop guest.
+
+checking_parallels_processes_prl_tools_exe:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    prl_tools.exe is the Parallels Tools service process; its presence confirms
+    Parallels Desktop Tools are installed in a Parallels guest VM.
+
+# ── Hyper-V-specific checks ───────────────────────────────────────
+checking_for_hyper_v_driver_objects:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    Attempts to open Hyper-V-specific kernel driver objects (e.g., \\.\vmbus);
+    success confirms a Hyper-V guest or Windows with Hyper-V enabled.
+
+checking_for_hyper_v_global_objects:
+  mitre: "T1497.001"
+  checkpoint: "https://evasions.checkpoint.com/src/Evasions/techniques/processes.html"
+  description: >
+    Checks for Hyper-V global named objects in the kernel object namespace;
+    their presence reveals Hyper-V as the active hypervisor. Also fires on
+    Windows 10/11 hosts with Hyper-V or WSL2 enabled.

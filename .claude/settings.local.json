@@ -12,7 +12,8 @@
       "WebFetch(domain:evasions.checkpoint.com)",
       "WebFetch(domain:attack.mitre.org)",
       "WebFetch(domain:github.com)",
-      "Bash(python main.py --scenario baseline --env test --dry-run)"
+      "Bash(python main.py --scenario baseline --env test --dry-run)",
+      "Bash(python -c \"import yaml; d=yaml.safe_load\\(open\\('configs/check_mitre.yaml'\\)\\); print\\(f'check_mitre.yaml: {len\\(d\\)} entries, YAML valid'\\)\")"
     ]
   }
 }
