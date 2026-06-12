@@ -277,7 +277,7 @@ def _run_scenario(
 
     print(f"\n[parser] Total checks : {len(check_results)}", end="")
     if dedup_merged:
-        print(f"  ({dedup_merged} duplicate(s) merged — same check covered by both tools)", end="")
+        print(f"  ({dedup_merged} duplicate(s) collapsed)", end="")
     print()
 
     if not check_results:
